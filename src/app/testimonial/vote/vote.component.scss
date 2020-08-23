@@ -1,0 +1,19 @@
+
+
+.myiframe2{
+     height:380px ; 
+    margin-bottom: 1em;
+    @media screen and (min-width: 690px) {
+        height:420px ; 
+    }
+    @media screen and (min-width: 769px) {
+       
+  
+        height:490px ; 
+    }
+    @media screen and (min-width: 1450px) {
+       
+  
+        height:630px ; 
+    }
+  }

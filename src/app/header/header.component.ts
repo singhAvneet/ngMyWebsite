@@ -1,18 +1,32 @@
-import { Component, OnInit,  Output,EventEmitter } from '@angular/core';
+import { Component, OnInit, Output,EventEmitter   } from '@angular/core';
+
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent  {
-@Output() tabEmmiter=new EventEmitter<string>();
+  clickMessage = '';
+  @Output() tabSelected: EventEmitter<any> = new EventEmitter();
+ // navbar-header
+  onClickMe() {
+    var  nav = document.getElementById('nav-barId');
+   var  el = document.getElementById('myNavbar');   
+    el.setAttribute("style", "display:block;");
+    nav.setAttribute("style", "display:none;"); 
 
-selectedItem='';
-  onSelect(tab:string){
-    this.selectedItem=tab;
-    this.tabEmmiter.emit(tab);
   }
+  onClickLink(tabNAme){
+    var  nav = document.getElementById('nav-barId');
+    var  el = document.getElementById('myNavbar');    
+    el.setAttribute("style", "display:none;");
+    nav.setAttribute("style", "display:block;"); 
+
+ 
+    this.tabSelected.emit(tabNAme);
+  }
+
 
 
 }

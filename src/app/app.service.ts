@@ -8,7 +8,8 @@ import 'rxjs/add/operator/catch';
 
 @Injectable()
 export class AppService {
-    private greetUrl = 'api/Hello';
+    // private greetUrl = 'api/Hello';
+    private greetUrl='https://freegeoip.net/json/';
 
     // Resolve HTTP using the constructor
     constructor(private _http: Http) {
@@ -18,14 +19,9 @@ export class AppService {
 
     sayHello(): Observable<any> {
         return this._http.get(this.greetUrl).map((response: Response) => {
-            return response.text();
+            return response.json();
         });
     }
 
-    // insertCat(cat: Cat): Observable<Cat> {
-    //     return this._http.post<cat>('http://localhost:8000/api/cats/', cat);
-    //   }
-    //   add<T>(toAdd: T) {
-    //     return this._http.post<T>(this.greetUrl, toAdd, { headers: this.headers });
-    // }
+  
 }

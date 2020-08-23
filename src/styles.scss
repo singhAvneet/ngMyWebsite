@@ -1,14 +1,13 @@
-
-    
-   
+@import '~bootstrap/scss/bootstrap';
+@import 'app/variable'; 
+@import 'app/custom'; 
     
    :root {
-     --main-bg-color: #2d7e91;
-     --bg-color: #f6f6f6;
+     --bg-color: #f6f6f6;//CSS variable
    }
    footer{
        display:block!important;
-       background-color: var(--main-bg-color);
+       background-color: $--main-bg-color;
        height:40px;
        color:white
    }
@@ -51,24 +50,25 @@
      }  
      .jumbotron {
          display:none;
-         background-color: var(--main-bg-color);
+         background-color: $--main-bg-color;
          color: #fff;
          padding: 100px 25px;
          font-family: Montserrat, sans-serif;
      }
      .container-fluid {
-        background-color: var(--bg-color);  
-         padding: 60px 50px;
+        // background-color: var(--bg-color);  
+         //padding: 100px 100px;
+        //  height: 100vh
      }
      /* .bg-grey {
          background-color: #f6f6f6;
      } */
      .logo-small {
-         color: var(--main-bg-color);
+         color: $--main-bg-color;
          font-size: 50px;
      }
      .logo {
-         color: var(--main-bg-color);
+         color: $--main-bg-color;
          font-size: 200px;
      }
      .thumbnail {
@@ -83,13 +83,13 @@
      }
      .carousel-control.right, .carousel-control.left {
          background-image: none;
-         color: var(--main-bg-color);
+         color: $--main-bg-color;
      }
      .carousel-indicators li {
-         border-color: var(--main-bg-color);
+         border-color: $--main-bg-color;
      }
      .carousel-indicators li.active {
-         background-color: var(--main-bg-color);
+         background-color: $--main-bg-color;
      }
      .item h4 {
          font-size: 19px;
@@ -102,7 +102,7 @@
          font-style: normal;
      }
      .panel {
-         border: 1px solid var(--main-bg-color); 
+         border: 1px solid $--main-bg-color; 
          border-radius:0 !important;
          transition: box-shadow 0.5s;
      }
@@ -110,13 +110,13 @@
          box-shadow: 5px 0px 40px rgba(0,0,0, .2);
      }
      .panel-footer .btn:hover {
-         border: 1px solid var(--main-bg-color);
+         border: 1px solid $--main-bg-color;
          background-color: #fff !important;
-         color: var(--main-bg-color);
+         color: $--main-bg-color;
      }
      .panel-heading {
          color: #fff !important;
-         background-color: var(--main-bg-color) !important;
+         background-color: $--main-bg-color !important;
          padding: 25px;
          border-bottom: 1px solid transparent;
          border-top-left-radius: 0px;
@@ -136,14 +136,12 @@
      }
      .panel-footer .btn {
          margin: 15px 0;
-         background-color: var(--main-bg-color);
+         background-color: $--main-bg-color;
          color: #fff;
      }
      .navbar {
-         position:fixed;
-         padding: 0;
          margin-bottom: 0;
-         background-color: var(--main-bg-color);
+         background-color: $--main-bg-color;
          z-index: 9999;
          border: 0;
          font-size: 12px !important;
@@ -156,7 +154,7 @@
          color: #fff !important;
      }
      .navbar-nav li a:hover, .navbar-nav li.active a {
-         color: var(--main-bg-color) !important;
+         color: $--main-bg-color !important;
          background-color: #f6f6f6 !important;
      }
      .navbar-default .navbar-toggle {
@@ -166,7 +164,7 @@
      footer .glyphicon {
          font-size: 20px;
          margin-bottom: 20px;
-         color: var(--main-bg-color);
+         color: $--main-bg-color;
      }
      .slideanim {visibility:inherit}
      .slide {
@@ -176,6 +174,26 @@
          -webkit-animation-duration: 1s;
          visibility: visible;
      }
+
+        .navbar-nav{
+            flex-direction: row
+        }
+        .navbar-fixed-top{
+            position:fixed;
+            padding: 0
+        }
+        #Testimonials{
+        .nav-tabs{
+            li.active,li:hover{
+                border: none;
+                a{
+                background:#e7e7e7;
+
+                }
+                        }
+        }
+    }
+
      @keyframes slide {
        0% {
          opacity: 0;
@@ -196,6 +214,10 @@
          -webkit-transform: translateY(0%);
        }
      }
+
+    .slider-prev-next-control label:hover, a:hover{
+         cursor: pointer;
+     }
      @media screen and (max-width: 768px) {
        .col-sm-4 {
          text-align: center;
@@ -205,13 +227,93 @@
            width: 100%;
            margin-bottom: 35px;
        }
-     }
-     @media screen and (max-width: 480px) {
-       .logo {
-           font-size: 150px;
+       .navbar .tabClass{
+           font-size:10px
        }
      }
+     @media screen and (max-width: 480px) {//482
+     
+       .navbar{
 
-     .navbar-nav{
-         flex-direction: row
+           
+            .navbar-collapse.collapse.in {
+               
+                .nav{
+                    padding-bottom: 10px;
+                    li{
+                        width:100%;
+                    }
+                }
+            }
+            .navbar-collapse.collapse.in + .navbar-header{
+                display: none;
+            }
+    }
      }
+
+     .navbar-header{
+        position:absolute;
+        right:4em;
+        
+    }
+
+     .logo {
+        font-size: 150px;
+    }
+        .container-fluid{
+            padding:100px 10px 100px 10px
+        }
+        h2{font-size: 20px}
+        h4{font-size:1em}
+        footer{
+            font-size: 9px
+        }
+
+        .navClass,.tablink {
+            width:100%
+        }
+      
+        @media screen and (min-width: 768px) {
+
+            .navClass{
+                width:auto
+            }
+            .tablink {
+                width:100%
+            }
+            h2{font-size: 24px}
+            h4{font-size:19px}
+            .logo {
+                font-size: 200px;
+            }
+           
+                   
+        }
+       
+        @media screen and (min-width: 480px) {
+            .navbar-header{
+              
+                 right:1em;
+                 
+             }
+            .container-fluid{
+               
+                padding:100px 40px
+            }
+            footer{
+                font-size: 1em
+            }
+        }
+
+
+       
+
+
+
+
+      
+      
+
+
+
+     

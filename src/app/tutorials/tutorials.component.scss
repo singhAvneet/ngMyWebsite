@@ -1,0 +1,44 @@
+/* @import '~bootstrap/scss/bootstrap';
+@import '~app/variable';  */
+
+.progress {
+    width: 100%;
+    height:30px;
+    background-color: #ddd;
+    @media only screen and (max-width: 450px) {
+        margin-bottom: 10px
+    }
+        
+}
+.progress-bar {
+    width: 0%;
+    height: 30px;
+    line-height: 28px;
+background-color: #2d7e91;
+
+}  
+
+@keyframes progress-jquery {    
+    from { }
+    to { width: 85% }
+    }
+@keyframes progress-sql {
+    from { }
+    to { width: 80% }
+}
+@keyframes progress-java {
+    from { }
+    to { width: 75% }
+}
+@keyframes progress-hmlcss {
+                from { }
+                to { width: 90% }
+}
+@keyframes progress-type {
+    from { }
+    to { width: 65% }
+}
+@keyframes progress-csharp {
+    from { }
+    to { width: 75% }
+}

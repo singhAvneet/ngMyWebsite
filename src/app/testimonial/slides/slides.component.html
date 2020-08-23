@@ -1,0 +1,28 @@
+<div class="wrapper">                  
+    <input name="slider" *ngFor="let item of model,let i=index" id="slide{{i+1}}" type="radio" [checked]=" i==0" >                 
+   <div class="slider-wrapper">
+    <div class="inner">                    
+           <ng-container *ngFor="let item of model"> 
+              <article >        
+              <div class="info bottom-left">
+                  <!-- <a href="{{ item.url}}">link</a> -->
+                  </div>
+                <img src="{{item.img}}"  height="auto" class="img-fluid" alt="Responsive image">
+                <!-- width="50%" height="380" -->
+               
+              </article>         
+          </ng-container> 
+    </div>                   
+  </div>
+                   
+  <div class="slider-prev-next-control">
+      <label  *ngFor="let item of model,let i=index" for="slide{{i+1}}"  (click)="emitIndex(i)"></label>                     
+    </div>                                      
+    <div class="slider-dot-control">
+        <label  *ngFor="let item of model,let i=index" for="slide{{i+1}}" (click)="emitIndex(i)"></label>          
+    </div> 
+    
+
+
+  </div>
+

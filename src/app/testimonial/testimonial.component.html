@@ -1,69 +1,139 @@
 <!-- Container Testimonials Section) -->
 <div id="Testimonials" class="container-fluid text-center " >
-  <h2>TESTIMONIALS</h2><br>
-  <h4>What we have created</h4>
-  <div class="row text-center slideanim">
-    <div class="col-sm-4">
-      <div class="thumbnail">
-        <img src="http://www.statravel.co.uk/static/uk_division_web_live/assets/Canada--content-extra-content_460x220-bus_lake.jpg" alt="Paris" width="400" height="300">
-        <p><strong>Paris</strong></p>
-        <p>Yes, we built Paris</p>
-      </div>
-    </div>
-    <div class="col-sm-4">
-      <div class="thumbnail">
-        <img src="http://www.statravel.co.uk/static/uk_division_web_live/assets/Canada--content-extra-content_460x220-bus_lake.jpg" alt="New York" width="400" height="300">
-        <p><strong>New York</strong></p>
-        <p>We built New York</p>
-      </div>
-    </div>
-    <div class="col-sm-4">
-      <div class="thumbnail">
-        <img src="http://www.statravel.co.uk/static/uk_division_web_live/assets/Canada--content-extra-content_460x220-bus_lake.jpg" alt="San Francisco" width="400" height="300">
-        <p><strong>San Francisco</strong></p>
-        <p>Yes, San Fran is ours</p>
-      </div>
-    </div>
-  </div><br>
+    <h2>My Work Samples</h2>
   
-  <h2>Why to choose Us</h2>
-  <div id="myCarousel" class="carousel slide text-center" data-ride="carousel">
-    <!-- Indicators -->
-    <ol class="carousel-indicators">
-      <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-      <li data-target="#myCarousel" data-slide-to="1"></li>
-      <li data-target="#myCarousel" data-slide-to="2"></li>
-      <li data-target="#myCarousel" data-slide-to="3"></li>
-      <li data-target="#myCarousel" data-slide-to="4"></li>
-    </ol>
-
-    <!-- Wrapper for slides -->
-    <div class="carousel-inner" role="listbox">
-      <div class="item active">
-        <h4>"Our team has full knowledge of the sabzi Mandi accounting system and can also customize software according to clients requirement."</h4>
-      </div>
-      <div class="item">
-        <h4>"24x7 online service and onsite service."</h4>
-      </div>
-      <div class="item">
-        <h4>"Very easy to operate software. The person who know only little bit computer typing can operate it."</h4>
-      </div>
-      <div class="item">
-        <h4>"Day by day introducing new technologies in eZee ver 10.1."</h4>
-      </div>
-      <div class="item">
-        <h4>"Customization of software provide ease to clients to work only in a particular module."</h4>
-      </div>
-    </div>
-
-    <!-- Left and right controls -->
-    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-      <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-      <span class="sr-only">Previous</span>
-    </a>
-    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-      <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-      <span class="sr-only">Next</span>
-    </a>
+  
+    
+    <div class="testimonialContainer">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="tab" role="tabpanel">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation"  [ngClass]="{active: workItem==='images'}"><a (click)="onClickWorkFile('images')" aria-controls="images" role="tab" data-toggle="tab">Samples</a></li>
+                            <li role="presentation"  [ngClass]="{active: workItem==='php'}"><a (click)="onClickWorkFile('php')" aria-controls="php" role="tab" data-toggle="tab">PHP</a></li>
+                            <li role="presentation"  [ngClass]="{active: workItem==='games'}"><a (click)="onClickWorkFile('games')" aria-controls="games" role="tab" data-toggle="tab">Games</a></li>
+                        </ul>
+                        <!-- Tab panes -->
+                        <div class="tab-content tabs" style="padding:0">
+                            <div role="tabpanel"  class="tab-pane fade " [ngClass]="{'active in' : workItem==='images'}">
+                               <br>
+                                    <!-- <div  class=""> -->
+                                       
+                                            <div class=" col-md-3 col-sm-12 col-xs-12"> <!-- required for floating -->
+                                              <!-- Nav tabs -->
+                                              <ul class="nav nav-tabs sampleTabs tabs-left">            
+                                                  <li  class=" col-md-12  "   *ngFor="let item of items,let i=index"
+                                                  [ngClass]="{active: graphItem == item.app[0].name}" >
+                                                  <a class="tabClass"  (click)="onSelect(item.app[0].name)">{{item.app[0].name}} </a></li>
+                                              </ul> 
+                                            </div>
+                                          
+                                            <div class="col-md-7 col-sm-12 col-xs-12">
+                                              <!-- Tab panes -->
+                                              <div >
+                                                  <app-slides (indexEmitter)="instantiateIndex($event)" [model]="items[choosenItem].app" ></app-slides>
+                                                  <!-- <ng-container *ngFor="let item of items,let i=index">
+                                                  <app-slides  [model]="item.app" *ngIf="selectedItem ===item.app[0].name"></app-slides>        
+                                               </ng-container> -->
+                                              
+                                          
+                                              </div>
+                                              <a class="blink_me" href="{{ items[choosenItem].app[index].url}}">link</a>
+                                        <h4>This slide show is a perfect example of using angular tools and see <strong>HOW</strong></h4>         
+                                          
+                                        <p>A single child component is being shared by all the {{items.length}} project tabs.</p>
+                                        <p>Structural directives manipulating HTML layout.</p>   
+                                         <p>"ng-container" plays a role to group image elements using NgIf, NgFor built-in directives.</p>
+                                         
+                                         <p>Custom structural directive use to perform click events.	 </p>
+                                         <p>Property binding to give the parent control over the child component.</p>
+                                         <p>@Input decorator to make the property available for binding by the child component.</p>
+                                        
+                                         
+                                            </div>
+                                          
+                                            <div class="clearfix"></div> 
+                                          <!-- </div>   -->
+                                        
+                            
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade myiframe2" [ngClass]="{'active in' : workItem==='php'}">
+                                    <!-- <div  class=""> -->
+                                                   <br>             
+                                        <!-- <div   *ngIf="workItem ==='php'" class=""> -->
+                                               
+                                                <div class=" col-md-3 col-sm-12 col-xs-12"> <!-- required for floating -->
+                                                <div class=" slideanim iframContainer" >
+                                            
+                                                    <iframe id="myiframe" scrolling="no" width="100%" height="380" src="https://singhavneet.000webhostapp.com/vote/create.php" frameborder="0" allowfullscreen></iframe>
+                                                    <hr>
+                                                    </div>
+                                                </div>
+                                            
+                                                <div  *ngIf="workItem ==='php'" class="col-md-7 col-sm-12 col-xs-12">
+                                                    <!-- [ngClass]="{active: selectItem === 'barGraph'}" -->
+                                                    <button class="navClass tablink  col-md-6 col-sm-12"  [ngClass]="{active: graphChoosen === 0}" (click)="onSelect('barGraph')">Status</button>
+                                                    <button class="navClass tablink  col-md-6 col-sm-12" [ngClass]="{active: graphChoosen === 1}" (click)="onSelect('dashBoard')">Dash Board</button> 
+                                                    
+                                                    
+                                                    
+                                                    <div   *ngIf="graphChoosen === 0">         
+                                                            <app-vote [modell]="graphitems[graphChoosen].url"  ></app-vote>
+                                                            </div>
+                                                    <div  *ngIf="graphChoosen === 1">         
+                                                                <app-vote [modell]="graphitems[graphChoosen].url"  ></app-vote>
+                                                                </div>
+                                                            <!-- <app-vote [modell]="url2" *ngIf="graphItem ===dashBoard"></app-vote>   -->
+                                                                                            
+                                                    
+                                                    
+                                                    
+                                                
+                                                    <h4>This is a real time voting survey application and see <strong>HOW</strong></h4>       
+                                            
+                                                    <p>Graph data point changes after each voting.</p>
+                                                    <p>User can't cast vote twice in a month.  </p>               
+                                                    <p>Fake input emails filteration implemented at front-end and back-end layer.</p>
+                                                    <p>Capable of recording number of vote per month in every year.</p>
+                                                    
+                                                    <hr>
+                                                    </div>
+                                            <!-- </div> -->
+      
+                                    <!-- </div> -->
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" *ngIf="workItem === 'games'" [ngClass]="{'active in' : workItem==='games'}">
+                                
+                                            <br>
+                                                 <!-- <div  class=""> -->
+                                                    
+                                                         <div class=" col-md-3 col-sm-12 col-xs-12"> <!-- required for floating -->
+                                                           <!-- Nav tabs -->
+                                                           <ul class="nav nav-tabs sampleTabs tabs-left">            
+                                                               <li  class=" col-md-12  "   *ngFor="let item of gamesitems,let i=index"
+                                                               [ngClass]="{active: gameChoosen === i}" >
+                                                               <a class="tabClass"  (click)="onSelect(item.name)">{{item.name}} </a></li>
+                                                           </ul> 
+                                                         </div>
+                                                       
+                                                         <div class="col-md-7 col-sm-12 col-xs-12">
+                                                           <!-- Tab panes -->
+                                                           <div    *ngIf="gameChoosen === 0">         
+                                                                <app-vote [modell]="gamesitems[gameChoosen].url"  ></app-vote>
+                                                                </div>
+                                                                <div    *ngIf="gameChoosen === 1">         
+                                                                        <app-vote [modell]="gamesitems[gameChoosen].url"  ></app-vote>
+                                                                        </div>
+                                                                                                
+                                         </div>
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+  
   </div>
-</div>
+  

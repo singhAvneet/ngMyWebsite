@@ -1,22 +1,21 @@
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+      <div class="collapse navbar-collapse" id="myNavbar">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="navClass"   ><a class="tabClass"  (click)="onClickLink('about')" >ABOUT</a></li>
+            <li class="navClass"   ><a class="tabClass"  (click)="onClickLink('tutorials')">PROFESSIONAL</a></li>
+            <li class="navClass"   ><a class="tabClass"  (click)="onClickLink('testimonial')">PORTFOLIO</a></li>
+            <li class="navClass"   ><a class="tabClass"  (click)="onClickLink('contact')">CONTACT</a></li>
+          </ul>
+        </div>
+    <div  class="navbar-header" id="nav-barId">
+      <button type="button" (click)="onClickMe()" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>                        
       </button>
       <!-- <a class="navbar-brand" href="#about" (click)="onSelect('about')">Logo</a> -->
     </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav navbar-right">
-        <!-- <li class="navClass"><a class="navbar-brand" href="#about" (click)="onSelect('about')">Logo</a></li> -->
-        <li class="navClass" [ngClass]="{active: selectedItem === 'about'}"><a class="tabClass" href="#about" (click)="onSelect('about')">ABOUT</a></li>
-        <li class="navClass" [ngClass]="{active: selectedItem === 'tutorial'}"><a class="tabClass" href="#Tutorials" (click)="onSelect('tutorial')">TUTORIALS</a></li>
-        <li class="navClass" [ngClass]="{active: selectedItem === 'testimonial'}"><a class="tabClass" href="#Testimonials" (click)="onSelect('testimonial')">TESTIMONIALS</a></li>
-        <li class="navClass" [ngClass]="{active: selectedItem === 'support'}"><a class="tabClass" href="#supports" (click)="onSelect('support')">SUPPORTS</a></li>
-        <li class="navClass" [ngClass]="{active: selectedItem === 'contact'}"><a class="tabClass" href="#contact" (click)="onSelect('contact')">CONTACT</a></li>
-      </ul>
-    </div>
+  
   </div>
 </nav>
