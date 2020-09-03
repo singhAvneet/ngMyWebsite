@@ -13,7 +13,6 @@ import { HeaderComponent } from './header/header.component';
 import { TestimonialComponent } from './testimonial/testimonial.component';
 import { ContactComponent } from './contact/contact.component';
 import { SlidesComponent } from './testimonial/slides/slides.component';
-import { VoteComponent } from './testimonial/vote/vote.component';
 // import { appRoutiingModule } from './app-routing.module';
 
 
@@ -27,7 +26,6 @@ import { VoteComponent } from './testimonial/vote/vote.component';
     TestimonialComponent,
     ContactComponent,
     SlidesComponent,
-    VoteComponent,
   ],
   imports: [
     BrowserModule,
