@@ -1,0 +1,35 @@
+
+@import '../../../variable.scss'; 
+.askMeImage{
+    height: 34em;
+    background: url($--img-url+'/explore/avneet/i.jpg') 100% 50% / cover;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;    
+    font-size: 42px;
+    a{
+      text-decoration-line: none;
+      background-color: $--main-bg-color;
+      padding: 1em;
+      color:#ffff
+    }
+    
+    .ask:hover,.ask:active{
+        b{
+            color:$--main-bg-color;
+        }
+
+  background-color: #fff;
+    }
+
+
+
+
+
+  }
+
+
+
+

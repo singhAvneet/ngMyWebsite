@@ -1,0 +1,799 @@
+<div  id="ngDiv">
+  <div class=" about-image bg" > </div>  
+  <div  class="container about">      
+          <div class="row explore">          
+              <div class="col-sm-12 about-article " >              
+                  <h2> What is a modern streaming pipeline with CDC integration looks like?</h2>
+                  <p>October 06, 2020</p>
+                  <hr>
+                  <p>
+                    In this article we’ve built from scratch a completely new ETL
+                    pipeline using Debezium, Kafka, kafka streams and KsqlDB, which can automatically handle schema changes. 
+                    Like most companies, we also have traditional SQL databases that we need to connect to in order to extract relevant data.
+                  </p>
+                  <p>
+                    Let me introduced a new approach that has become quite popular lately is to use Debezium as the Change Data Capture layer which reads 
+                    databases binlogs, and stream these changes directly to Kafka. As having data once a day is not enough anymore for our business, 
+                    and we wanted our pipelines to be resilient to upstream schema changes, we’ve decided to rebuild our ETL using Debezium.
+                  </p>
+                  <p>
+                    By building this new pipeline we are now able to refresh our data lake multiple times a day, giving our users fresh data, and protecting our nights of sleep.
+                  </p>
+                    In this session, We will walk through the following:
+                  <ul>
+                    <li>Configuring Change Data Capture on SQL Server</li>
+                    <li>Creating a Kafka Sink Connector from SQL Server to Kafka using Debezium</li>
+                    <li>Using the Kafka Streams library for Java to perform ETL</li>
+                  </ul> 
+                </div>
+              </div> 
+     </div>
+   
+   
+   
+   
+   
+                 
+                       <div class=" highlight">
+                         <div  class="container">
+                             <div class="row "> 
+                                 <div class="col-sm-12 " > 
+                                
+                                    ETL stands for Extract Transform Load pipeline. And it’s used for setting up a Data warehouse or Data lake. Giving structure to unstructured data, 
+                                    because we are storing it into a Data warehouse which generally we use for storing structured data from multiple resources.
+                                 
+                                   Data warehouse is collecting multiple structured Data sources like Relational databases, but in a Data lake we store both structured & unstructured data.
+                                   The data can be a source Database logs for reading every transaction or an event for a particular transaction. In case of MySQL we called it as binlog and in 
+                                   case of PostgreSQL we called it as wal-logs (Write Ahead Log)
+                                 </div>
+                             </div>
+                         </div>
+                        </div>
+   
+   
+   
+                        
+   
+<div  class="container about">      
+  <div class="row explore">          
+    <div class="col-sm-12 about-article " >   
+      <hr>
+      <h2>Summary</h2>
+    
+      <ul>
+        <li>Case Study</li>
+        <li>Prerequisite</li>
+        <li>Technologies</li>
+        <li>Set Up CDC For SQL Server</li>
+        <li>Configure Technology stack</li>
+        <li>Configure SQL To Debezium-Kafka Connector</li>
+        <li>Automate Microservices</li>
+        <li>Streamimg ETL With Kafka Streams</li>
+        <li>Streamimg ETL With KSqlDB</li>
+      </ul>
+      <hr>
+      <h2>Case Study</h2>   
+      <p>The Debezium SQL Server Source Connector take a snapshot of the existing data in a SQL Server database and then monitor and 
+        record all subsequent row-level changes to that data. All of the events for each table are recorded in a separate Apache Kafka topic, where they can 
+        be easily consumed by applications and services.
+      I’ll walk you through the steps we followed to architect and build such solution using Docker to reduce development time.</p>
+      <img src="http://localhost:4201/explore/avneet/dbz/dbz1.svg" alt="solution archietect" width="100%" >
+      <p>The Debezium SQL Server Source Connector s an open source connector that requires the CDC feature to function. The CDC feature is provided by SQL Server Standard edition (2016 SP1 and later) or SQL Server Enterprise edition.</p>
+      <hr>
+      <h2>Prerequisite</h2>
+      <h5>Docker Compose</h5>
+      <p>
+        <b>Docker Compose</b> is included in <a class="link" href="https://www.docker.com/products/docker-desktop">Docker Desktop</a>  for Windows and macOS.
+      </p>
+      <p>
+        For linux, you can download Docker Compose binaries from the <a class="link" href="https://github.com/docker/compose/releases">release page</a>  on this repository.
+      </p>
+      <p >
+        If your platform still not supported, you can download Docker Compose using pip:</p>
+        <span class="row cli">
+          <span class="  cmd col-sm-12"><span>pip</span> install docker-compose</span>
+        </span>
+        <p>Docker memory is allocated minimally at 8 GB. When using Docker Desktop for Mac, the default Docker memory allocation is 2 GB. You can change the default allocation to 
+          8 GB in Docker. Navigate to <b>Preferences</b> > <b>Resources</b> > <b>Advanced</b>.
+            Just ensure you have Docker Desktop. What is more fun than to get an proof of concept running on your own machine? Using Docker it is easy to set up a local 
+            instance of the stack so we can give it a try and explore the possibilities.
+        </p>
+
+        <h5>OpenJDK 11</h5>
+        <p>To download OpenJDK 11, you have to go to <a class="link" href="http://jdk.java.net/archive/">OpenJDK Archive download</a> page. Then scroll down a little bit to find any version starting with 11.0.2. 
+          OpenJDK is distributed in only zip or tar.gz file. For Windows,
+          download the zip file for Windows 64-bit. Extract the downloaded zip file to a directory(c:). Then type the following command to update JAVA_HOME (in Command Prompt with administrator right):
+          </p>
+          <span class="row cli">
+            <span class="  cmd col-sm-12"><span>set</span> -m JAVA_HOME "c:\JDK\OpenJDK\jdk-11.0.2"</span>
+          </span>
+
+        <hr>
+        <h2>Technologies</h2>           
+        
+        <h5>Debezium</h5>
+        <p>
+          <b>Debezium</b> Debezium is nothing but a Change Data Capture (CDC). Which tracks every event (insert, update, delete) from the source DB and will push the event to Kafka using Kafka Connect. 
+          It uses source Database logs for reading every transaction and make an event for a particular transaction.
+        </p>
+
+
+
+        <h5>Kafak</h5>
+        <p>
+          <b>Apache™ Kafka</b> is an open source fast, scalable, durable, and fault-tolerant publish-subscribe messaging system. Kafka is well known for its high throughput, 
+          reliability and replication. In this setup Kafka is used to collect and buffer the events, that are then consumed by InfluxDb. We need Kafka to persist the 
+          data and act as a buffer when there are bursts of events, that happen when there is, for example, an airing of a TV commercial.
+        </p>
+
+        <h5>KsqlDB</h5>
+        <p>
+          <b>KsqlDB</b> is the streaming SQL engine with a new kind of database purpose-built that enables real-time data processing applications against data in
+        Apache Kafka and enhancing developer productivity. KSQL allows to view your data as an unbounded STREAM of data on which you can 
+        run SQL queries such as JOIN two streams or run some aggregation
+        functions on a stream such as COUNT, SUM, MIN, MAX, AVG, TOPK etc. 
+        You do not need to write stream processing code in Java but I did wrote one in this 
+        article.
+        </p>
+
+        <h5>Kafka Streams</h5>
+        <p><b>Kafka Streams</b> is a light weight Java library for creating advanced streaming applications on top of Apache Kafka Topics. Kafka Streams provides easy to use
+            constructs that allow quick and almost declarative composition by Java developers of streaming pipelines that do running aggregates, real time filtering, 
+            time windows, joining of streams
+          </p>
+        <h5>Docker</h5>
+        <p>
+          <b>Docker</b> engine is a platform that provides the tools for you to build, run, test, and deploy distributed applications. It spins up a light weight VM's container based on Linux that 
+          have everything the software needs to run including libraries, system tools, code, and runtime without needing to run any operating system.
+        </p>
+
+        <hr>
+        <h2>set up SQL Server Change Data Capture</h2>
+        <p>CDC is described as one of the main characteristics of the SQL Server feature for tracking data inserts, deletes and updates. It can be enabled by using system stored procedures.
+          So let create a <b>setup.sql</b> file and copy/past the code to enable CDC on the customers table and testDB database as follow here:
+        </p>
+        <span class="row cli">
+          <pre  class=" cmd  col-sm-12" >
+<span>CREATE</span> DATABASE testDB;
+<span>GO</span>
+-- Enable CDC on testDB --
+<span>USE</span> testDB
+<span>GO</span>
+<span>EXEC</span> sys.sp_cdc_enable_db
+-- Create some customers ...
+<span>CREATE</span> TABLE customers (
+id INTEGER IDENTITY(1001,1) NOT NULL PRIMARY KEY,
+name VARCHAR(255) NOT NULL, 
+country VARCHAR(50) NOT NULL,
+continent VARCHAR(50) NOT NULL,
+);
+<span>INSERT</span> INTO customers(name,country,continent)
+VALUES ('Sally','finland','Europe');
+<span>INSERT</span> INTO customers(name,country,continent)
+VALUES ('George','canada','North America');
+<span>INSERT</span> INTO customers(name,country,continent)
+VALUES ('Edward','china','Asia');
+<span>INSERT</span> INTO customers(name,country,continent)
+VALUES ('Anne','germany','Europe');
+
+<span>EXEC</span> sys.sp_cdc_enable_table
+@source_schema = N'dbo',
+@source_name   = N'customers' ,
+@role_name     = NULL,
+@supports_net_changes = 1
+<span>GO</span> </pre>
+            </span>
+            <hr>
+            <h2>Configure technology stack with docker</h2>
+            <p>If you are familiar with Docker, You can use a <b>docker-compose.yml</b> file to spin up the bare minimum microservers such as Zookeeper, Kafka, SQL server, Kafka-Connector and Ksql.
+            KSQL server connects to your Kafka broker and KSQL CLI connects to KSQL server. Ksql and Ksql-cli can also be use to perform ETL jobs using standard SQL queries.
+            So let's create one with the code shown below as follow:</p>
+<span class="row cli">
+<pre  class=" cmd  col-sm-12" >
+---
+version: '2'
+services:
+zookeeper:
+  image: confluentinc/cp-zookeeper:5.3.1
+  hostname: zookeeper
+  container_name: zookeeper
+  ports:
+  - "2181:2181"
+  environment:
+  ZOOKEEPER_CLIENT_PORT: 2181
+  ZOOKEEPER_TICK_TIME: 2000
+broker:
+  image: confluentinc/cp-enterprise-kafka:5.3.1
+  hostname: broker
+  container_name: broker
+  depends_on:
+  - zookeeper
+  ports:
+  - '9092:9092'
+  - '29094:29094'
+  environment:
+  KAFKA_BROKER_ID: 1
+  KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+  KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+  KAFKA_ADVERTISED_LISTENERS: EXTERNAL://localhost:29094,INTERNAL://broker:9092
+  KAFKA_LISTENERS: EXTERNAL://0.0.0.0:29094,INTERNAL://0.0.0.0:9092
+  KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+  KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+sqlserver:
+  image: mcr.microsoft.com/mssql/server:2017-latest
+  hostname: sqlserver
+  container_name: sqlserver
+  ports:
+  - 1433:1433
+  environment:
+  - ACCEPT_EULA=Y
+  - MSSQL_PID=Standard
+  - SA_PASSWORD=Password!
+  - MSSQL_AGENT_ENABLED=true
+ksql-server:
+  image: confluentinc/ksqldb-server:0.17.0
+  hostname: ksqldb-server
+  container_name: ksqldb-server
+  depends_on:
+  - kafka
+  ports:
+  - "8088:8088"
+  environment:
+  KSQL_CONFIG_DIR: "/etc/ksqldb"
+  KSQL_BOOTSTRAP_SERVERS: broker:9092
+  KSQL_HOST_NAME: ksqldb-server
+  KSQL_LISTENERS: "http://0.0.0.0:8088"
+  KSQL_CACHE_MAX_BYTES_BUFFERING: 0
+ksql-cli:
+  image: confluentinc/ksqldb-cli:0.17.0
+  container_name: ksqldb-cli
+  depends_on:
+    - broker
+    - ksqldb-server
+  environment:
+    KSQL_CONFIG_DIR: "/etc/ksqldb"
+  tty: true</pre>
+</span>
+
+
+
+
+
+        <hr>
+        <h2>Configure SQL Server to Debezium-Kafka Sink Connector</h2>
+        <p>The Kafka Connect Base image contains Kafka Connect and all of its dependencies. When started, it will run the Connect framework in distributed mode. 
+          To add new connector like <b>Debezium</b> to this image, you need to build a new Docker image that has the new connectors installed. The following example show how to add 
+          connectors. So let's create a Dockerfile as follow:
+        </p>
+        <span class="row cli">
+          <pre  class=" cmd  col-sm-12" >
+<span>FROM</span> confluentinc/cp-kafka-connect-base:6.0.0
+<span>ENV</span> COMPONENT=kafka-connect
+
+<span>RUN</span> confluent-hub install debezium/debezium-connector-sqlserver:1.3.1 --no-prompt
+<span>RUN</span> confluent-hub install confluentinc/kafka-connect-s3:latest --no-prompt
+<span>RUN</span> confluent-hub install confluentinc/kafka-connect-replicator:latest --no-prompt
+<span>RUN</span> confluent-hub install confluentinc/kafka-connect-kinesis:1.3.3 --no-prompt</pre>
+            </span>
+            <p>We have choosen the connector <b>debezium-connector-sqlserver</b> from Confluent Hub that we like to include in our custom image. Note that the remaining steps containing 
+              optional connectors such as a AWS S3 connector, Kafka-Replicator connector, and AWS Kinesis connector. If you’d like to keep the custom image lightweight and not include any connectors that you don’t plan to use.</p>
+            <span>Build the Dockerfile:</span>
+            <span class="row cli">
+              <span  class=" cmd  col-sm-12" >
+                docker build -t kafka-debezium-connect .
+              </span>
+            </span>
+            <p>You may now update the docker-compose file as follow:</p>
+<span class="row cli">
+<pre  class=" cmd  col-sm-12" >
+
+...
+
+connect:
+image: kafka-debezium-connect
+hostname: connect
+container_name: connect
+depends_on:
+- zookeeper
+- broker
+ports:
+- "8083:8083"
+- "49997:49997"
+environment:
+CONNECT_BOOTSTRAP_SERVERS: 'broker:9092'
+CONNECT_REST_ADVERTISED_HOST_NAME: connect
+CONNECT_REST_PORT: 8083
+CONNECT_GROUP_ID: compose-connect-group
+CONNECT_CONFIG_STORAGE_TOPIC: docker-connect-configs
+CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+CONNECT_OFFSET_FLUSH_INTERVAL_MS: 10000
+CONNECT_OFFSET_STORAGE_TOPIC: docker-connect-offsets
+CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+CONNECT_STATUS_STORAGE_TOPIC: docker-connect-status
+CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
+CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+CONNECT_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+# Assumes image is based on confluentinc/kafka-connect-datagen:latest which is pulling 5.0.0 Connect image
+CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.0.0.jar
+CONNECT_PRODUCER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
+CONNECT_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
+CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
+CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
+aws_access_key_id = 'your_access_key_id'
+aws_secret_access_key = 'your_secret_access_key'
+KAFKA_JMX_PORT: 49997
+KAFKA_JMX_HOSTNAME: 'connect'
+
+...</pre>
+</span>
+
+        <p>Let's create a <b>connector-setup.json</b> file so that we can curl to submit to our Kafka Connect service a JSON request message to start capturing events from source 
+          DB using Debezium under the hood (It needs the source DB credentials below):</p>
+          <span class="row cli">
+            <pre  class=" cmd  col-sm-12" >
+{{ '{' }}
+"name": "testDB-connector",
+"config":  {{ '{' }}
+"connector.class": "io.debezium.connector.sqlserver.SqlServerConnector",
+"database.hostname": "sqlserver",
+"database.port": "1433",
+"database.user": "sa",
+"database.password": "Password!",
+"database.dbname": "testDB",
+"database.server.name": "sqlserver",
+"database.whitelist": "testDB", 
+"table.include.list": "customers",
+"column.exclude.list": ".*RowVersion, .*LastUpdate, .*UserID",
+"value.converter.enhanced.avro.schema.support": "true",
+"decimal.handling.mode": "double",
+"transforms": "unwrap",
+"transforms.unwrap.type": "io.debezium.transforms.ExtractNewRecordState",
+"transforms.unwrap.drop.tombstones": "false",
+"database.history.kafka.bootstrap.servers": "broker:9092",
+"database.history.kafka.topic": "dbhistory.testDB"
+}
+}</pre>
+          </span>
+
+          <hr>
+          <h2>Automate Microservices with Batch</h2>
+          <p>Lastly you may want to write a <b>start.bat</b> file where we will execute sql, docker-compose and curl command asynchronously all in one are as follow: </p>
+<span class="row cli">
+<pre  class=" cmd  col-sm-12" >
+<span>@echo off</span>
+<span>Rem</span> REQUIREMENTS
+<span>Rem</span> Docker and docker-compose cmd line tools for windows, and docker desktop for windows
+<span>Rem</span> SQL Server 2016 with SQL Server Agent Running
+<span>Rem</span> CDC Enabled
+<span>Rem</span> Set database.hostname IP address in connector-setup.json to your local IP (This is so the docker container knows how to communicate with the host machine running SQL server)
+<span>echo</span> Starting Docker Containers
+<span>docker-compose</span> up -d
+<span>echo</span> WAITING 45 SECONDS
+<span>timeout</span> /t 45
+<span>echo</span> Initialize database and insert test data with setup.sql
+<span>cat</span> setup.sql | docker exec -i sqlserver bash -c '/opt/mssql-tools/bin/sqlcmd -U sa -P Password!'
+<span>echo</span> Setting up Connectors
+<span>REM</span> curl -s -X POST -H "Accept:application/json" -H  "Content-Type: application/json" --data @connector-setup.json http://localhost:8083/connectors
+<span>@echo on</span></pre>
+</span>
+
+              <p>You may be interested to write <b>stop.bat</b> file to bring down all the microservice container are as follow:</p>
+<span class="row cli">
+<pre  class=" cmd  col-sm-12" >
+<span>@echo</span> off
+<span>pushd</span> %~dp0
+<span>echo</span> Stopping Docker Containers
+<span>docker-compose</span> down
+<span>echo</span> Removing Volumes
+<span>docker</span> volume prune -f</pre>
+</span>
+
+          <p>It's Done! Once you execute <b>start.bat</b> up, as point it at testDB, and Debezium starts responding to all of the inserts, updates, and deletes that your 
+            front-end apps commit to the databases. Debezium-Kafka connector send change log events to Kafka topic in the same order for every changes made to the database. 
+            It is durable and fast and never miss an event, even when your apps and services down for maintenance.</p>
+          <p>The next step is to write code in order to implement real time ETL on every events generated inside Kafka topic. The Code is nothing but a Kafka-Streams api code that will extract 
+            the change log events from Kafka topic, transforms it and load it into another destination frontend app's via websockets.</p>
+
+
+
+
+
+
+          <hr>
+          <h2>Getting Started with Kafka Streams</h2>
+          <p>Kafka Streams is a light weight Java library for creating advanced streaming applications on top of Apache Kafka Topics. It's easy to use 
+            and constructs streaming pipelines that do running aggregates, real time filtering, time windows, 
+            joining of streams. Results from the streaming analysis can easily be published to another Kafka Topic or to external destinations.
+            </p>
+
+
+          <p>Lets's assume a simple JSON messages that describe a "customers" with properties such as name, country and continent – are produced to a Kafka Topic 
+            (this can be done from a simple Lambda application that reads the data from Restful API Gatway and update data to the RDS Sql database. Debezium on the other hand 
+            publishes the updated records to a Kafka Topic).
+
+          </p>
+
+          <img src="http://localhost:4201/explore/avneet/dbz/dbz.svg" alt="solution archietect" width="100%" >
+          <br><br>
+          <b>Initialize a new Maven project</b>
+          <p>Open your web-browser to <a class="link" href="https://start.spring.io">https://start.spring.io.</a> This is a launchpad for creating new Spring Boot applications for 
+            now we will go with the bare minimum. Switch to Maven if that is your preferred build tool and Click Generate Project!</p>
+            <p>This will download a zip file called demo Feel free to extract this file and open this project in any Java IDE. navigate a command prompt to the base directory and 
+              issue a command:</p>
+              <span class="row cli">
+                <span  class=" cmd  col-sm-12" >
+                        <span>mvn</span> clean install
+                  </span>
+                  </span>
+                  <p>Running your application: </p>
+                  <span class="row cli">
+                    <span  class=" cmd  col-sm-12" >
+                            <span>mvn</span> spring-boot:run
+                      </span>
+                      </span>
+              <p>If output in the terminal looks good, then lets add the dependency on Kafka Streams to the Maven <b>pom.xml</b> file</p>        
+<span class="row cli">
+<pre  class=" cmd  col-sm-12" >
+&lt;!--STREAMS--&gt;
+&lt;<span><span>dependency</span></span>&gt;
+&lt;<span><span>groupId</span></span>>org.apache.kafka&lt;/<span><span>groupId</span></span>&gt;
+&lt;<span><span>artifactId</span></span>>kafka-streams&lt;/<span><span>artifactId</span></span>&gt;
+&lt;<span><span>version</span></span>>0.10.0.0 &lt;/<span><span>version</span></span>&gt;
+&lt;/<span><span>dependency</span></span>&gt;  
+&lt;!--STREAMS--&gt;
+&lt;<span><span>dependency</span></span>&gt;
+    &lt;<span><span>groupId</span></span>&gt;org.rocksdb&lt;/<span><span>groupId</span></span>&gt;
+    &lt;<span><span>artifactId</span></span>&gt;rocksdbjni&lt;/<span><span>artifactId</span></span>&gt;
+    &lt;<span><span>version</span></span>&gt;4.9.0&lt;/<span><span>version</span></span>&gt;
+&lt;/<span><span>dependency</span></span>&gt;</pre>
+
+
+
+</span>
+
+                <b>Implement Java Application</b>
+                <p>Now will write some code in <b>main.java</b> file which uses KStream api to extract events from Kafka, transform and load back messages to Kafka pipeline in real-time are as follow: </p>
+                <ul>
+                  <li>create KStream using StreamBuilder for Kafka Topic countries</li>
+                  <li>selectKey for messages in the KStream: continent</li>
+                  <li>countByKey the messages in the KStream</li>
+                  <li>route the resulting running count messages to a stream for the destination Kafka Topic RunningCountryCountPerContinent</li>                 
+                </ul>
+
+
+
+<span class="row cli">
+<pre  class=" cmd  col-sm-12" >
+  <span>import</span> nl.amis.streams.JsonPOJOSerializer;
+  <span>import</span> nl.amis.streams.JsonPOJODeserializer;
+  
+  // generic Java imports
+  <span>import</span> java.util.Properties;
+  <span>import</span> java.util.HashMap;
+  <span>import</span> java.util.Map;
+  // Kafka imports
+  <span>import</span> org.apache.kafka.common.serialization.Serde;
+  <span>import</span> org.apache.kafka.common.serialization.Serdes;
+  <span>import</span> org.apache.kafka.common.serialization.Serializer;
+  <span>import</span> org.apache.kafka.common.serialization.Deserializer;
+  // Kafka Streams related imports
+  <span>import</span> org.apache.kafka.streams.StreamsConfig;
+  <span>import</span> org.apache.kafka.streams.KafkaStreams;
+  <span>import</span> org.apache.kafka.streams.kstream.KStream;
+  <span>import</span> org.apache.kafka.streams.kstream.KTable;
+  <span>import</span> org.apache.kafka.streams.kstream.KStreamBuilder;
+  <span>import</span> org.apache.kafka.streams.processor.WallclockTimestampExtractor;
+  
+  
+  <span>public class</span> <span><span>App</span></span> {{ '{' }}
+  <span>static public class</span> CountryMessage {{ '{' }}
+        /* the JSON messages produced to the customers Topic have this structure:
+         {{ '{' }} "name" : "sally"
+         , "country" : "finland"
+         , "continent" : "Europe"
+         };
+   
+        this class needs to have at least the corresponding fields to deserialize the JSON messages into
+        */
+  
+        <span>public</span> String country;
+        <span>public</span> String name;
+        <span>public</span> String continent;
+    }
+  
+    <span>private static final</span> String <span><span>APP_ID</span></span> = "countries-streaming-analysis-app";
+  
+    <span>public static void</span> <span><span>main</span></span>(<span>String</span>[] <span>args</span>) {{ '{' }}
+        System.out.println("Kafka Streams Demonstration");
+  
+        // Create an instance of StreamsConfig from the Properties instance
+        StreamsConfig config = <span>new</span> StreamsConfig(getProperties());
+        <span>final</span> Serde &lt; String &gt; stringSerde = Serdes.String();
+        <span>final</span> Serde &lt; Long &gt; longSerde = Serdes.Long();
+  
+        // define countryMessageSerde
+        Map &lt; String, Object &gt; serdeProps = <span>new</span> HashMap &lt; &gt; ();
+        <span>final</span> Serializer &lt; CountryMessage &gt; countryMessageSerializer = <span>new</span> JsonPOJOSerializer &lt; &gt; ();
+        serdeProps.put("JsonPOJOClass", CountryMessage.class);
+        countryMessageSerializer.configure(serdeProps, <span><span>false</span></span>);
+  
+        <span>final</span> Deserializer &lt; CountryMessage &gt; countryMessageDeserializer = <span>new</span> JsonPOJODeserializer &lt; &gt; ();
+        serdeProps.put("JsonPOJOClass", CountryMessage.class);
+        countryMessageDeserializer.configure(serdeProps, <span><span>false</span></span>);
+        <span>final</span> Serde &lt; CountryMessage &gt; countryMessageSerde = Serdes.serdeFrom(countryMessageSerializer, countryMessageDeserializer);
+  
+        // building Kafka Streams Model
+        KStreamBuilder kStreamBuilder = <span>new</span> KStreamBuilder();
+        // the source of the streaming analysis is the topic with country messages
+        <span>KStream</span>&lt;String, CountryMessage&gt; countriesStream = 
+                                       kStreamBuilder.stream(stringSerde, countryMessageSerde, "countries");
+  
+        // THIS IS THE CORE OF THE STREAMING ANALYTICS:
+        // running count of countries per continent, published in topic RunningCountryCountPerContinent
+        <span>KTable</span>&lt;String,Long&gt; runningCountriesCountPerContinent = countriesStream
+                                                                 .selectKey((k, country) -&gt; country.continent)
+                                                                 .countByKey("Counts")
+                                                                 ;
+        runningCountriesCountPerContinent.to(stringSerde, longSerde,  "RunningCountryCountPerContinent");
+        runningCountriesCountPerContinent.print(stringSerde, longSerde);
+  
+  
+  
+        System.out.println("Starting Kafka Streams Countries Example");
+        KafkaStreams kafkaStreams = <span>new</span> KafkaStreams(kStreamBuilder, config);
+        kafkaStreams.start();
+        System.out.println("Now started CountriesStreams Example");
+    }
+  
+    <span>private static</span> Properties <span><span>getProperties</span></span>() {{ '{' }}
+        Properties settings = <span>new</span> Properties();
+        // Set a few key parameters
+        settings.put(StreamsConfig.<span><span>APPLICATION_ID_CONFIG</span></span>, <span><span>APP_ID</span></span>);
+        // Kafka bootstrap server (broker to talk to); broker/localhost is the host name for my VM running Kafka, port 9092 is where the (single) broker listens 
+        settings.put(StreamsConfig.<span><span>BOOTSTRAP_SERVERS_CONFIG</span></span>, "broker:9092");
+        // Apache ZooKeeper instance keeping watch over the Kafka cluster; zookeeper/localhost is the host name for my VM running Kafka, port 2181 is where the ZooKeeper listens 
+        settings.put(StreamsConfig.<span><span>ZOOKEEPER_CONNECT_CONFIG</span></span>, "zookeeper:2181");
+        // default serdes for serialzing and deserializing key and value from and to streams in case no specific Serde is specified
+        settings.put(StreamsConfig.<span><span>KEY_SERDE_CLASS_CONFIG</span></span>, Serdes.String().getClass().getName());
+        settings.put(StreamsConfig.<span><span>VALUE_SERDE_CLASS_CONFIG</span></span>, Serdes.String().getClass().getName());
+        settings.put(StreamsConfig.<span><span>STATE_DIR_CONFIG</span></span>, "C:\\temp");
+        settings.put(StreamsConfig.<span><span>TIMESTAMP_EXTRACTOR_CLASS_CONFIG</span></span>, WallclockTimestampExtractor.class);
+      <span>return</span> settings;
+    }</pre>
+</span>    
+
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+     
+                 
+  <div class=" highlight">
+    <div  class="container">
+        <div class="row "> 
+            <div class="col-sm-12 " > 
+           
+              Serde is an object that carries a serializer and a deserializer for a specific data type, used to serialize and deserialize keys and values 
+              into and from messages on a Kafka topic. Whenever our Java client consumes or produces elements, the Serde for those elements has to be provided. 
+              In this case, I have crafted the countryMessageSerde for the CountryMessage Java Class that is instantiated from a JSON message that is the value of 
+              consumed Kafka messages. This Serde carries a serializer and deserializer based on the JsonPOJODeserializer and JsonPOJOSerializer that are generic 
+              JSON to Java mappers, using the Jackson library for doing so.
+            </div>
+        </div>
+    </div>
+   </div>
+
+
+
+   
+
+<div  class="container about">      
+<div class="row explore">          
+<div class="col-sm-12 about-article " >   
+
+              <p>For JsonPOJOSerializer.java and JsonPOJODeserializer.java we have to add these two file in our Kstream project as follow:</p>
+              <b>JsonPOJOSerializer.java</b>
+<span class="row cli">
+<pre  class=" cmd  col-sm-12" >
+  <span>import</span> com.fasterxml.jackson.databind.ObjectMapper;
+  <span>import</span> org.apache.kafka.common.errors.SerializationException;
+  <span>import</span> org.apache.kafka.common.serialization.Serializer;
+  
+  <span>import</span> java.util.Map;
+  
+  <span>public class</span> <span><span>JsonPOJOSerializer</span></span>&lt;T&gt; <span>implements</span> <span><span>Serializer</span></span>&lt;T&gt; {{ '{' }}
+  <span>private final</span> ObjectMapper objectMapper = new ObjectMapper();
+  
+      <span>private Class</span>&lt;T&gt; tClass;
+  
+      /**
+       * Default constructor needed by Kafka
+       */
+       <span>public</span> <span><span>JsonPOJOSerializer</span></span>() {{ '{' }}
+  
+      }
+  
+      <span>@SuppressWarnings</span>("unchecked")
+      <span>@Override</span>
+      <span>public void</span> <span><span>configure</span></span>(<span>Map</span>&lt;String, ?&gt; <span>props</span>, <span>boolean</span> <span>isKey</span>) {{ '{' }}
+          tClass = (<span>Class</span>&lt;T&gt;) props.get("JsonPOJOClass");
+      }
+  
+      <span>@Override</span>
+      <span>public byte</span>[] <span><span>serialize</span></span>(String <span>topic</span>, T <span>data</span>) {{ '{' }}
+      <span>if</span> (data == null)
+      <span>return</span> null;
+  
+      <span>try</span> {{ '{' }}
+      <span>return</span> objectMapper.writeValueAsBytes(data);
+          } <span>catch</span> (Exception e) {{ '{' }}
+          <span>throw new</span> SerializationException("Error serializing JSON message", e);
+          }
+      }
+  
+      <span>@Override</span>
+      <span>public void</span> <span><span>close</span></span>() {{ '{' }}
+      }
+  
+  }
+
+
+</pre>
+</span>
+              <b>JsonPOJODeserializer.java</b>
+<span class="row cli">
+<pre  class=" cmd  col-sm-12" >
+
+  <span>import</span> com.fasterxml.jackson.databind.ObjectMapper;
+  <span>import</span> org.apache.kafka.common.errors.SerializationException;
+  <span>import</span> org.apache.kafka.common.serialization.Deserializer;
+  
+  <span>import</span> java.util.Map;
+  
+  <span>public class</span> <span><span>JsonPOJODeserializer</span></span>&lt;T&gt; <span>implements</span> <span><span>Deserializer</span></span>&lt;T&gt;  {{ '{' }}
+  <span>private</span> ObjectMapper objectMapper = <span>new</span> ObjectMapper();
+  
+  <span>private Class</span>&lt;T&gt; tClass;
+  
+      /**
+       * Default constructor needed by Kafka
+       */
+       <span>public</span> <span><span>JsonPOJODeserializer</span></span>()  {{ '{' }}
+      }
+  
+      <span>@SuppressWarnings</span>("unchecked")
+      <span>@Override</span>
+      <span>public void</span> <span><span>configure</span></span>(<span>Map</span>&lt;String, ?&gt; <span>props</span>, <span>boolean</span> <span>isKey</span>)  {{ '{' }}
+          tClass = (<span>Class</span>&lt;T&gt;) props.get("JsonPOJOClass");
+      }
+  
+      <span>@Override</span>
+      <span>public</span> T <span><span>deserialize</span></span>(String <span>topic</span>, <span>byte</span>[] <span>bytes</span>)  {{ '{' }}
+      <span>if</span> (bytes == null)
+      <span>return</span> null;
+  
+          T data;
+          <span>try</span>  {{ '{' }}
+              data = objectMapper.readValue(bytes, tClass);
+          } <span>catch</span> (Exception e)  {{ '{' }}
+              throw <span>new</span> SerializationException(e);
+          }
+  
+          <span>return</span> data;
+      }
+  
+      <span>@Override</span>
+      <span>public void</span> close()  {{ '{' }}
+  
+      }
+  }</pre>
+</span>
+                        <p>Running your application again: </p>
+                        <span class="row cli">
+                          <span  class=" cmd  col-sm-12" >
+                                  <span>mvn</span> spring-boot:run
+                            </span>
+                            </span>
+                        <p>Finally!, the running count is produced in the output topic "RunningCountryCountPerContinent" which have a String type Key and a Long type value.
+                          Some changelog – is also created by the Kafka Streams library as an intermediate change log for the running count. Instead of keeping the temporary results [only] 
+                          in memory, they are produced to a Kafka Topic as well. This is it! Kafka Stream architecture and implementing Kafka Streams. We looked at features and use case of Kafka Streams. Still, if any doubt occurs feel free to Ask. I will 
+                          definitely respond to you back.
+                        </p>
+
+                        <hr>
+                        <h2>Streamimg ETL With KsqlDB</h2>
+                        <p>KsqlDB is actually a bulit-in Kafka Streams application along with database purpose-built for stream processing applications. 
+                          It provides a simple and completely interactive SQL interface for stream processing 
+                          on Kafka; no need to write code in a programming language such as Java like the way we did in this article so far. 
+                        </p>
+
+                        <p>If there are two ways(ksqlDB and Kafka Streams) to stream process in Kafka, so let resolve and produce same output topic "RunningCountryCountPerContinent", 
+                          it gives us an idea of additional amount of work needed in Kafka Streams to get the same output from ksqlDB. From a directory containing the 
+                          <b>stop.bat start.bat</b> files created in the previous steps, execute these file in order to re-start all services in the correct order.
+                        </p>
+                        <span class="row cli">
+                          <span  class=" cmd  col-sm-12" >
+                            stop.bat <br>
+                            start.bat
+                            </span>
+                            </span>                       
+                            
+                          <p> Once all services have successfully launched, you will have a ksqlDB server running and ready to use. Make some changes in the database with
+                            your favourite frontend web app and  Debezium-Kafka connector in respose will send change log events to Kafka topic called "customers". Instead of
+                            KStream java library we will analyze each change log messages in KSqlDB. Count the number of "continent" occurring from the "countries" stream
+                            and, then the messages in Ktable is written back to the "RunningCountryCountPerContinent" topic. Now let's Run a command to connect to the ksqlDB 
+                            server and enter an interactive command-line interface (CLI) session.
+                          </p>
+                          <span class="row cli">
+                            <span  class=" cmd  col-sm-12" >
+                              docker exec -it ksqldb-cli ksql http://ksqldb-server:8088
+                              </span>
+                              </span>  
+                          <p>The first thing we're going to do is create a stream. A stream essentially associates a schema with an underlying Kafka topic. Copy and paste this 
+                            statement into your interactive CLI session, and press enter to execute the statement:</p>
+                            <span class="row cli">
+<pre  class=" cmd  col-sm-12" >
+CREATE STREAM countriesStream (name VARCHAR, country VARCHAR, continent VARCHAR) 
+      WITH (kafka_topic='customers', value_format='json');</pre>
+</span>  
+
+                            <p>Now we will run a persistent query over the stream. This query will count the occurrence of "continent" from the "countriesStream" stream. 
+                              This will also push output rows to the clients as events are written to the "RunningCountryCountPerContinent" stream as output topic.
+                            </p>
+
+<span class="row cli">
+<pre  class=" cmd  col-sm-12" >
+  CREATE TABLE RunningCountryCountPerContinent AS   
+    SELECT continent, count(continent) 
+    FROM countriesStream 
+    GROUP by continent
+    EMIT CHANGES;</pre>
+  </span>  
+                            <p>Leave this query running in the CLI session for now. Once again, we're going to update database on "customer" table from any of your web app. 
+                              With every change data capture Debezium will send change log event to "customer" topic. The KsqlDB running on the other side of Kafka as a consumer
+                               will generate "countriesStream" stream and the persistent query will output matching rows in real time as soon as they're written to the "RunningCountryCountPerContinent" stream. 
+                               The future of ksqlDB is bold. It is a fast-moving project that is bound to become a powerful new category of stream processing infrastructure. 
+                               More robust database features will be added to ksqlDB soon—ones that truly make sense for the de facto event streaming database of the modern enterprise.</p>
+
+                               <b>When to choose ksqlDB and when to choose Kafka Streams</b>
+                            <p>A use case where the performance demands or massive scale (i.e., billions of messages per day) rule out ksqlDB as a viable option, then consider 
+                              Kafka Streams or if we need to create an end-to-end stream processing application with highly imperative logic, the Streams API makes the most sense 
+                              as SQL is best used for solving declarative-style problems say for example we need to join streams, employ filters, and perform aggregations and the like, 
+                              ksqlDB works great. If you have a question, click "Ask me".
+                            </p>
+
+
+</div>
+</div>
+</div>
+
+
+
+
+
+                <a class=" read-more" routerLink="/"> <p > back </p>  </a>            
+
+    
+
+
+
+
+</div>
+                      
+
+
+
+
+                                    <!-- https://towardsdatascience.com/4-easy-steps-to-setting-up-an-etl-data-pipeline-from-scratch-a6e67c40b6e1 -->
+                                    <!-- https://technology.amis.nl/languages/java-languages/getting-started-with-kafka-streams-building-a-streaming-analytics-java-application-against-a-kafka-topic/ -->

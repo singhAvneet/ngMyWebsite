@@ -1,0 +1,680 @@
+<div  id="ngDiv">
+  <div class=" about-image bg" > </div>  
+  <div  class="container about">
+ 
+
+          
+
+          <div class="row explore">          
+            <div class="col-sm-12 about-article " >              
+                <h2>Be the boss of your data: Learn how to set up data streaming analytics from kafka.</h2>
+                <p>June 26, 2019</p>
+                <hr>
+                <p>
+                  It's never a good idea to be locked in to a vendor for your data collection. Similarly, 
+                  sending your clickstream data to cloud providers can present issues. Better to take control and 
+                  free yourself from data ownership issues, closed formats and license or service fees for obtaining for
+                  your own data
+                </p>
+                <p>
+                  This blog gives an introduction to setting up streaming analytics using open-source technologies. 
+                  We'll use Divolte, Apache Kafka, InfluxDb/Druid/Mysql/Psql, Prometheus and Grafana/Superset to set up a system that allows you to get a deeper 
+                  understanding of the behaviour of your customers.
+                </p>
+                <p>
+                  This stack can be an alternative to Google Analytics and allows you to have all the data directly 
+                  available within your own environment and keep your data outside third-party vendors. Events are captured 
+                  by Divolte, queue'd using Kafka, stored in InfluxDb, and are visualized using Grafana.
+                </p>
+                <hr>
+                <h2>Summary</h2>
+               
+                  <ul>
+                    <li>Case Study</li>
+                    <li>Prerequisite</li>
+                    <li>Technologies</li>
+                    <li>Configuring Divolte Collector</li>
+                    <li>Configuring Kafka Cluster</li>
+                    <li>Configuring Kafka Consumer</li>
+                    <li>Integrate Grafana With InfluxDB </li>
+                    <li>AWS Cloud Data Analytics (Optional)</li>
+                  </ul>
+                  
+                <hr>
+                <h2>Case Study</h2>   
+                <p>
+                  Will start with a simple app where Divolte javascript snippets have been embedded into the code, and 
+                  where Divolte Collectors have been deployed that send their data on to Apache Kafka. Then, to power the business exploration of the data, 
+                  InfluxDb consumes and processes those events from Python as Kafka consumer in real-time ready for data point to display in a data exploration app like Grafana or AWS Athena.
+                  Athena can connect to AWS S3 using the AWS Glue Data Catalog. After the connection is made, your databases, tables, and views appear in Athena's query editor.
+                </p>
+          
+                <img src="http://localhost:4201/explore/avneet/divolte/dv.svg" alt="solution archietect" width="100%" >
+
+                <p>
+                  I could have connect Kafka Sink Connector to sink data directly to InfluxDB but this comes with a cost after 30 day free trail. Instead of that, I am using Python Kafka 
+                  consumer application which consumes data from Kafka output topic when available and writes it to InfluxDB tables. You can also build you own kafka consumer
+                  in java framework like spring-boot, but I decided to go with python just to get familiar with it.
+
+                  I also could have connect Mysql/Psql directly to Kafka Sink Connector without any cost. But due to light weight of InfluxDb, It is a great database for real time data 
+                    processing with very good interface with Grafana. 
+                </p>
+                <hr>
+                <h2>Prerequisite</h2>
+                <h5>Docker Compose</h5>
+                <p>
+                  <b>Docker Compose</b> is included in <a class="link" href="https://www.docker.com/products/docker-desktop">Docker Desktop</a>  for Windows and macOS.
+                </p>
+                <p>
+                  For linux, you can download Docker Compose binaries from the <a class="link" href="https://github.com/docker/compose/releases">release page</a>  on this repository.
+                </p>
+                <span >
+                  If your platform still not supported, you can download Docker Compose using pip:</span>
+                  <span class="row cli">
+                    <span class="  cmd col-sm-12"><span>pip</span> install docker-compose</span>
+                  </span>
+                  <p> Just ensure you have Docker Desktop. What is more fun than to get an proof of concept running on your own machine? Using Docker it is easy to set up a local instance of the stack so we can give it a try and explore the possibilities.
+                </p>
+                <hr>
+                <h2>Technologies</h2>
+                <h5>Divolte</h5>
+                <p>
+                  <b>Divolte Collector</b> is an open source lightweight server that provides a JavaScript tag on the client side for collecting click stream data to HDFS for offline 
+                  processing or to Kafka queues for near real-time processing. By using a JavaScript tag in the browser of the customers, it gathers data about their 
+                  behaviour on the website or application. Divolte can be used as the foundation to build anything from basic web analytics dashboarding to real-time mobile application.
+               
+                </p>
+                <h5>Kafka</h5>
+                <p>
+                  <b>Apache™ Kafka</b> is an open source fast, scalable, durable, and fault-tolerant publish-subscribe messaging system. Kafka is well known for its high throughput, 
+                  reliability and replication. In this setup Kafka is used to collect and buffer the events, that are then consumed by InfluxDb. 
+                  We need Kafka to persist the data and act as a buffer when there are bursts of events, that happen when there is, for example, an airing of a TV commercial.
+                </p>
+                <h5>Grafana</h5>
+                <p>
+                  <b>Grafana</b> is an open source analytics, data visualization platform to visualize metrics, logs, and traces monitoring dashboard 
+                  which is very easy to use and has great integration with most of the databases like Prometheus, Loki, Elasticsearch, InfluxDB, Postgres and many more. 
+                  Grafana provides a great UI interface to view for example real time number of IoT device connections and application health check graphs.
+                </p>
+
+                <h5>Docker</h5>
+                <p>
+                  <b>Docker</b> engine is a platform that provides the tools for you to build, run, test, and deploy distributed applications. It spins up a light weight VM's container based on Linux that have everything the software needs to run including libraries, system tools, code, and runtime without needing to run any operating system. 
+                </p>
+
+                <hr>
+
+
+                <h2>Configuring Divolte Collector</h2>
+                <p>Let's spin up a Divolte server in a docker container with these two files as follow:</p>
+                <dl>                  
+                  <dt>Dockerfile</dt>
+                  <dt>divolte-collector.conf</dt>
+                </dl>
+                <p>
+                  We will create our own <b>divolte-collector.conf</b> file by copy paste lines below to this file. 
+                  This configuration will tell your Divolte Server to whom you want to send clickstream events. Here for an example see how Divolte Collector is writing data to a Kafka topic.
+                  Once done change kafka bootstrap server's IP and topic name.
+                </p>
+
+                <span class="row cli">
+                <pre  class=" cmd  col-sm-12" >
+divolte {{ '{' }}  
+  global {{ '{' }}    
+    kafka {{ '{' }}       
+      enabled = true      
+      // The value assinged to 'bootstrap.servers' under the producer key in this      
+      // configuration contains url i.e BrokerIpAddress:port for each broker node in the kafka cluster      
+  
+      producer = {{ '{' }}        
+                  bootstrap.servers = "10.200.8.55:9092,10.200.8.53:9092,10.200.8.54:9092"      
+                }    
+        }  
+    }  
+  sinks {{ '{' }}
+    kafka {{ '{' }}      
+      type = kafka      
+      topic = divolte-data    
+      }  
+    }
+
+  sources {{ '{' }}
+    browser  {{ '{' }}      
+      type = browser      
+      javascript {{ '{' }}  
+        name = "clickstream"
+        }
+    }  
+  }
+}</pre>
+                
+                </span>
+
+                <p>We want our divolte application as a services to run in a container so that they are portable and this can be can be dockerized using the following Dockerfile.
+                  We will create Dockerfile by copy paste lines below to this file.
+                </p>
+
+                <span class="row cli">
+                  <pre  class=" cmd  col-sm-12" >
+<span>FROM</span> openjdk:8-jre-slim
+<span>ARG</span> BUILD_DATE
+<span>ARG</span> DIVOLTE_VERSION=0.9.0
+#
+# Install dependencies and Divolte
+#
+<span>RUN</span> apt-get update && \
+<span>apt-get</span> install -y curl;\              
+<span>mkdir</span> -p /opt/divolte && \
+<span>cd</span> /tmp/ && \
+<span>curl</span> -O http://divolte-releases.s3-website-eu-west-1.amazonaws.com/divolte-collector/$ {{ '{' }} DIVOLTE_VERSION}/distributions/divolte-collector-$ {{ '{' }} DIVOLTE_VERSION}.tar.gz && \
+<span>tar</span> zxpf divolte-collector-$ {{ '{' }} DIVOLTE_VERSION}.tar.gz -C /opt/divolte && \
+<span>mv</span> /opt/divolte/divolte-collector-$ {{ '{' }} DIVOLTE_VERSION}/ /opt/divolte/divolte-collector && \
+<span>apt-get</span> remove -y  curl && \
+<span>apt-get</span> autoremove -y && \
+<span>apt-get</span> clean -y && \
+<span>rm</span> -fr /var/tmp/* /tmp/*
+#
+# Copy your divolte-collector.conf file changes just configured in the previous step
+#
+<span>COPY</span> divolte-collector.conf /opt/divolte/divolte-collector/conf/
+#
+# Expose the Divolte Collector Service @ port#8290
+#
+<span>EXPOSE</span> 8290
+<span>CMD</span> ["/opt/divolte/start.sh"]</pre>
+                </span>
+                
+                <span>In your current directory, you can build your docker container's image with tagName "divolte" using docker cli terminal window.</span>
+                <span class="row cli">
+                  <span  class=" cmd  col-sm-12" >
+                    Docker build -t divolte .
+                  </span>
+                </span>
+                <span>Once you sucessfully build the image, you can run divolte service in a divolte container like this.</span>
+                <span class="row cli">
+                  <span  class=" cmd  col-sm-12" >
+                    Docker run -d -p 8290:8290 divolte
+                  </span>
+                </span>
+                <p>Now, take your web browser to http://127.0.0.1:8290/clickstream.js and check that you see a javascript. Next step is to 
+                  collect click from your own site. The tag needs to be inserted into every web page that you want to track. Here is an example of the Divolte Collector tag in a HTML page.
+                </p>
+                <span class="row cli">
+                  <pre  class="cmd  col-sm-12">
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;My Website with Divolte Collector&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;script src="//localhost:8290/divolte.js" defer async&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</pre>
+                    </span>
+
+                  <p>The tag performs a number of important tasks. It generates unique identifiers for parties, sessions,
+                     page-views and events. It collects the location, referer, screen and viewport size information from the 
+                     browser sends it to the Divolte Collector server. Insert the tag as above into the HTML code on each 
+                     page. Additionally, once the Divolte Collector JavaScript is loaded in the browser 
+                     it is possible to fire custom events from TypeScript/JavaScript in the Angular app for an example:
+                  </p>
+                  <span class="row cli">
+                    <pre  class="cmd  col-sm-12">
+import {{ '{' }} Injectable, NgZone } from '@angular/core';
+declare var divolte: any;
+@Injectable()
+export class DivolteService {{ '{' }} 
+  signalEvent(eventName: string, eventValue: object) {{ '{' }}
+    divolte.signal(eventName, eventValue);
+  }
+}</pre>
+                  </span> 
+                
+                
+                
+                
+                
+                <hr>
+                <h2>Configuring Kafka Cluster</h2>
+                <p>We can create a <b>docker-compose.yml</b> file which can 
+                  bring up the entire cluster using a single command.</p>
+                  <p>Ksql is use to modify streaming data in kafka using standard SQL queries, but it is 
+                    completely optional for the purpose of setting up our bare-metal streaming analytical stack, so I decided to remove these two from the docker-compose file as follow: 
+                  </p>
+
+                  <span class="row cli">
+                    <pre  class="cmd  col-sm-12">
+---
+version: '2'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:5.3.1
+    hostname: zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+broker:
+    image: confluentinc/cp-enterprise-kafka:5.3.1
+    hostname: broker
+    container_name: broker
+    depends_on:
+      - zookeeper
+    ports:
+      - '9092:9092'
+      - '29094:29094'
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: EXTERNAL://localhost:29094,INTERNAL://broker:9092
+      KAFKA_LISTENERS: EXTERNAL://0.0.0.0:29094,INTERNAL://0.0.0.0:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL</pre>
+              </span>
+              <span>Bring up the services with one command:</span>
+              <span class="row cli">
+                <span  class="cmd  col-sm-12">
+                  docker-compose up -d
+              </span>
+              </span>
+
+              <hr>
+              <h2>CONFIGURING Kafka consumer</h2>
+              <p>We will have to update our docker-compose file to include Kafka consumer and influxDB server which bridge the 
+                connection between Kafka and Grafana, so lets first create our own Python Kafka consumer application which consumes data from Kafka output topic when available 
+                and writes it to InfluxDB tables. Copy/past the code below to a textfile nameing it as consumer.py and place it along with docker-compose file.</p>
+                <span class="row cli">
+                  <pre  class="cmd  col-sm-12">
+import sys
+import json
+from confluent_kafka import Consumer, KafkaError
+from influxdb import InfluxDBClient
+client = InfluxDBClient(host='influxdb', port=8086, database='logdb')
+client.create_database('logdb')
+c = Consumer({{ '{' }}
+'bootstrap.servers': 'broker:9092',
+'group.id': 'mygroup',
+'auto.offset.reset': 'earliest',
+'enable.auto.commit': False
+})
+c.subscribe(['LOG_TABLE_DEVICE_COUNT'])
+try:
+while True:
+print('Waiting for message..')
+msg = c.poll(1.0)
+if msg is None:
+    continue
+if msg.error():
+    print("Consumer error: {{ '{' }}".format(msg.error()))
+    continue
+#print('Received message: {{ '{' }}'.format(msg.value().decode('utf-8')))
+json_body = [
+{{ '{' }}
+    "measurement": "device-count", #this table will be automatically created
+    "tags": {{ '{' }}
+    },
+    "fields":json.loads(msg.value())
+}
+]
+client.write_points(json_body)
+except KeyboardInterrupt:
+sys.stderr.write('%% Aborted by user\n')
+finally:
+# Close down consumer to commit final offsets.
+c.close()</pre>
+                </span>
+                <p>This consumer app can be dockerized using the following Dockerfile, afterall We want our application 
+                  and services to run in a container so that they can be reference while updating the docker-compose file.</p>
+                  <span class="row cli">
+                    <pre  class="cmd  col-sm-12">
+<span>FROM</span> python:2.7-alpine
+<span>WORKDIR</span> /code
+<span>RUN</span> apk add --no-cache gcc musl-dev linux-headers librdkafka-dev build-base
+<span>COPY</span> requirements.txt requirements.txt
+<span>RUN</span> pip install -r requirements.txt
+<span>COPY</span> . .</pre>
+                      </span>
+                      <p>A <b>requirements.txt</b> file is also need to download dependencies which will be installed when 
+                        container initializes and place it along with docker-compose file. </p>
+                        <span class="row cli">
+                          <pre  class="cmd  col-sm-12">
+influxdb
+confluent-kafka</pre>
+                            </span>  
+
+                            <p>Now updating our docker-compose file:</p>
+                            <span class="row cli">
+                              <pre  class="cmd  col-sm-12">
+---
+version: '2'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:5.3.1
+    hostname: zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+broker:
+    image: confluentinc/cp-enterprise-kafka:5.3.1
+    hostname: broker
+    container_name: broker
+    depends_on:
+      - zookeeper
+    ports:
+      - '9092:9092'
+      - '29094:29094'
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: EXTERNAL://localhost:29094,INTERNAL://broker:9092
+      KAFKA_LISTENERS: EXTERNAL://0.0.0.0:29094,INTERNAL://0.0.0.0:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+influxdb:
+    image: influxdb:1.7.9
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+    volumes:
+      - $PWD/influxdb/data:/var/lib/influxdb
+python-consumer:
+    container_name: myconsumer
+    build: .
+    depends_on:
+      - broker
+      - influxdb
+    command:
+      - /bin/sh
+      - -c
+      - |
+        apk add --no-cache curl;
+        echo Waiting for influxdb API ...;
+        while ! nc -z influxdb 8086;
+        do
+          sleep 5;
+        done;
+        echo InfluxDB Ready ...; python consumer.py
+grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    depends_on:
+      - influxdb
+    ports:
+      - '3000:3000'
+    volumes:
+      - $PWD/grafana-storage:/var/lib/grafana
+volumes:
+    grafana-storage:</pre>
+                                </span>  
+                            <p>You might have noticed that I have included Grafana at the very end. Since we want the 
+                              Kafka output topic data to be visulize on Grafana dashboard, so I thought it is a right 
+                              time to add this service too. Similarly you can also add divolte service in the same file as follow:</p>
+                              <span class="row cli">
+                                <pre  class="cmd  col-sm-12">
+... 
+
+divolte:      
+    image: divolte/divolte-collector
+    hostname: divolte
+    container_name: divolte
+    depends_on:
+      - broker
+    ports:
+      - "8290:8290"
+
+...</pre>
+                              </span>
+                              <p>You can remove exsisting Divolte service if it is running as follow:</p>
+                              <span class="row cli">
+                                <pre  class="cmd  col-sm-12">
+Docker stop divolte
+Docker rm -v divolte</pre>
+                                </span>
+                              <span>Now bring up all services with one command:</span>
+                            <span class="row cli">
+                              <span  class="cmd  col-sm-12">
+                                docker-compose up -d</span>
+                            </span>
+                            <hr>
+                            <h2>Configure Grafana to use InfluxDB</h2>
+                            <p>Grafana allows the fast and easy development of dashboards for users. Setting up Grafana is pretty straight-forward.
+                              If the Grafana service is up and running, then take your web browser to http://127.0.0.1:3000. In the left navigation of 
+                              the Grafana UI, hover over the gear icon to expand the Configuration section. Click Add Data Sources to select InfluxDB from the list of available data sources. 
+                              On the Data Source configuration page, enter required details for your InfluxDB data source as follow:
+                            </p>
+                            <img src="http://localhost:4201/explore/avneet/divolte/grafana-influxDB.jpg" alt="solution archietect" width="100%" >
+                            <br><br> <p>Click Save & Test. Grafana attempts to connect to the InfluxDB and returns the results of the test. With your InfluxDB connection configured, use Grafana and 
+                               Flux to query and visualize time series data stored in your InfluxDB instance.</p>
+                               <p>Note the URL above is http://influxdb:8086 as we our using containerized influxDB image. If you have an instance running on your host machine you can use localhost instead or provide IP of influxDB server.
+                                <br>A sample dashboard which queries influxDB and updates every 5secs looks as follows:</p>
+                            <img src="http://localhost:4201/explore/avneet/divolte/grafana-sessions.jpg" alt="solution archietect" width="100%" >
+                            <br><br>
+                            <p>This is pretty neat! You can create custom and aggregated to build dashboard for your application.<br>
+                              Github link:<br>
+                              <a class="link"href="https://github.com/singhAvneet?tab=repositories">
+                               kafka-ksql-influxdb-grafana-datapipeline-streamer
+                              </a><br>
+                              This post helps you get started with building your own streaming data pipeline and single command deployment of all the necessary services.</p>
+                         
+                         
+                         <hr>
+                         <h2>Cloud Data Lake in Aws</h2>
+                         <p>Big-data is a hot topic nowadays and we often discuss how to collect, store, and query it. 
+                           In this section, simply we will try to sink same clickstream data from Kafka-Connector
+                            into the S3 bucket in .json file format and then AWS Glue will create a metadata for this. 
+                           Finally, we can query json by using AWS Athena with standart SQL queries.</p>
+
+                           <b>Configure Kafka Sink Connector</b>
+                           <p>Kafka supports connecting with Amazon S3 and numerous other databases/data warehouses with the help of 
+                             various in-built connectors. These connectors help bring in data from a source of your choice to Kafka and 
+                             then stream it to the destination of your choice from Kafka Topics.</p>
+                           <p>
+                            Once again we will have to update our docker-compose file to include Kafka-Connector that integrates 
+                            Kafka and AWS S3 bucket in amazone cloud. Copy/past the code below in our sweet docker-compose file. </p>
+                            <span class="row cli">
+                              <pre  class="cmd  col-sm-12">
+...
+
+connect:
+image: confluentinc/cp-kafka-connect:latest
+hostname: connect
+container_name: connect
+depends_on:
+  - zookeeper
+  - broker
+ports:
+  - "8083:8083"
+  - "49997:49997"
+environment:
+  CONNECT_BOOTSTRAP_SERVERS: 'broker:9092'
+  CONNECT_REST_ADVERTISED_HOST_NAME: connect
+  CONNECT_REST_PORT: 8083
+  CONNECT_GROUP_ID: compose-connect-group
+  CONNECT_CONFIG_STORAGE_TOPIC: docker-connect-configs
+  CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+  CONNECT_OFFSET_FLUSH_INTERVAL_MS: 10000
+  CONNECT_OFFSET_STORAGE_TOPIC: docker-connect-offsets
+  CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+  CONNECT_STATUS_STORAGE_TOPIC: docker-connect-status
+  CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+  CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+  CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
+  CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+  CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+  CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+  CONNECT_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+  # Assumes image is based on confluentinc/kafka-connect-datagen:latest which is pulling 5.0.0 Connect image
+  CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.0.0.jar
+  CONNECT_PRODUCER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
+  CONNECT_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
+  CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
+  CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
+  aws_access_key_id = 'your_access_key_id'
+  aws_secret_access_key = 'your_secret_access_key'
+  KAFKA_JMX_PORT: 49997
+  KAFKA_JMX_HOSTNAME: 'connect'
+
+...</pre>
+                              </span>
+
+                              <span>Spinning up the connect container as service with the same command:</span>
+                              <span class="row cli">
+                                <span  class="cmd  col-sm-12">
+                                  docker-compose up -d</span>
+                              </span>
+                              
+                              <p>Execute inside the connect container and install AWS S3 plugin as follow:</p> 
+<span class="row cli">
+<pre  class="cmd  col-sm-12">
+docker exec -it connect bash
+confluent-hub install confluentinc/kafka-connect-s3:latest</pre>
+</span>
+                          <p>As we shell exec into container, make sure that the configurations in etc/kafka-connect-s3/quickstart-s3.properties are properly set to your 
+                            configurations of S3, for example s3.bucket.name points to your bucket, s3.region directs to your S3 region and flush.size=3 for this example as follow:</p>
+<span class="row cli">
+<pre  class="cmd  col-sm-12">
+  {{ '{' }}
+  "name": "kafk-s3-sink",
+  "config":  {{ '{' }}
+  "_comment": "The S3 sink connector class",                                                                                                                                                                                                                      
+  "connector.class":"io.confluent.connect.s3.S3SinkConnector",                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                                  
+  "_comment": "The total number of Connect tasks to spawn (with implicit upper limit the number of topic-partitions)",                                                                                                                                            
+  "tasks.max":"1",                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                  
+  "_comment": "Which topics to export to S3",                                                                                                                                                                                                                     
+  "topics":"clickstream",                                                                                                                                                                                                                                             
+                                                                                                                                                                                                                                                                  
+  "_comment": "The S3 bucket that will be used by this connector instance",                                                                                                                                                                                       
+  "s3.bucket.name":"clickstream",                                                                                                                                                                                                                               
+                                                                                                                                                                                                                                                                  
+  "_comment": "The AWS region where the S3 bucket is located",                                                                                                                                                                                                    
+  "s3.region":"ca-central-1",                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                  
+  "_comment": "The size in bytes of a single part in a multipart upload. The last part is of s3.part.size bytes or less. This property does not affect the total size of an S3 object uploaded by the S3 connector",                                             
+  "s3.part.size":"5242880",                                                                                                                                                                                                                                       
+                                                                                                                                                                                                                                                                  
+  "_comment": "The maximum number of Kafka records contained in a single S3 object. Here a high value to allow for time-based partition to take precedence",                                                                                                                                                                              
+  "flush.size":"100000",                                                                                                                                                                                                                                          
+                                                                                                                                                                                                                                                                  
+  "_comment": "Kafka Connect converter used to deserialize keys (unused in this example)",                                                                                                                                                                        
+  "key.converter":"org.apache.kafka.connect.json.JsonConverter",                                                                                                                                                                                                  
+  "key.converter.schemas.enable":"false",                                                                                                                                                                                                                         
+                                                                                                                                                                                                                                                                  
+  "_comment": "Kafka Connect converter used to deserialize values",                                                                                                                                                                                               
+  "value.converter":"org.apache.kafka.connect.json.JsonConverter",                                                                                                                                                                                                
+  "value.converter.schemas.enable":"false",                                                                                                                                                                                                                       
+                                                                                                                                                                                                                                                                  
+  "_comment": "The type of storage for this storage cloud connector",                                                                                                                                                                                             
+  "storage.class":"io.confluent.connect.s3.storage.S3Storage",                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                                  
+  "_comment": "The storage format of the objects uploaded to S3",                                                                                                                                                                                                 
+  "format.class":"io.confluent.connect.s3.format.json.JsonFormat",                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                  
+  "_comment": "Schema compatibility mode between records with schemas (Useful when used with schema-based converters. Unused in this example, listed for completeness)",                                                                                          
+  "schema.compatibility":"NONE",                                                                                                                                                                                                                                  
+                                                                                                                                                                                                                                                                  
+  "_comment": "The class used to partition records in objects to S3. Here, partitioning based on time is used.",                                                                                                                                                  
+  "partitioner.class":"io.confluent.connect.storage.partitioner.TimeBasedPartitioner",                                                                                                                                                                            
+                                                                                                                                                                                                                                                                  
+  "_comment": "The locale used by the time-based partitioner to encode the date string",                                                                                                                                                                          
+  "locale":"en",
+  
+  "_comment": "Setting the timezone of the timestamps is also required by the time-based partitioner",                                                                                                                                                            
+  "timezone":"UTC",                                                                                                                                                                                                                                               
+                                                                                                                                                                                                                                                                  
+  "_comment": "The date-based part of the S3 object key",                                                                                                                                                                                                         
+  "path.format":"'date'=YYYY-MM-dd/'hour'=HH",                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                                  
+  "_comment": "The duration that aligns with the path format defined above",                                                                                                                                                                                      
+  "partition.duration.ms":"3600000",                                                                                                                                                                                                                              
+                                                                                                                                                                                                                                                                  
+  "_comment": "The interval between timestamps that is sufficient to upload a new object to S3. Here a small interval of 1min for better visualization during the demo",                                                                                          
+  "rotate.interval.ms":"60000",                                                                                                                                                                                                                                   
+                                                                                                                                                                                                                                                                  
+  "_comment": "The class to use to derive the timestamp for each record. Here Kafka record timestamps are used",                                                                                                                                                  
+  "timestamp.extractor":"Record" 
+  }
+}</pre>
+</span>
+                        <span>Save the Kafka S3 connector configuration, then exit the container and restart the service with the following command:</span>
+                        <span class="row cli">
+                          <span  class="cmd  col-sm-12">
+                          docker restart connect</span>
+                          </span>
+<p>If the divolte service along with all the microservice containers are running, you can then load some click data from divolte website to kafka cluster to S3 buckets. 
+  You should see few objects with keys: </p>
+<span class="row cli">
+<pre  class="cmd  col-sm-12">
+topics/clickstream/partition=0/clickstream+0+0000000000.json
+topics/clickstream/partition=0/clickstream+0+0000000003.json
+topics/clickstream/partition=0/clickstream+0+0000000006.json
+</pre>
+</span>
+
+                         
+                          <b>Configure Data Analytics On Data Lake</b>
+                          <p>First we need to create a role in the aws IAM console.</p>
+                          <ul>
+                            <li>Take browser to https://console.aws.amazon.com/iam/ click “Create Role” button.</li>
+                            <li>Choose “Glue” and go next</li>
+                            <li>Give a permisson to Glue and S3</li>
+                            <li>Enter a role name (AWSGlueServiceRoleDefault)and click on “Create role” button. You have created a role</li>
+                          </ul>
+                        
+                          <b>AWS Glue Operation</b>
+                          <p>Let's follow below some steps to create a crawler in the aws Glue console.</p>
+                          <ul>
+                            <li>Add a new database (sampledb)</li>
+                            <li>Add a new table by using “Add tables using a crawler” option</li>
+                            <li>Enter the crawler name (clickcrawler) and click Next button</li>
+                            <li>Enter the avro file path which was stored in S3 bucket and click Next button</li>
+                            <li>We do not need to add a new data store, select “No”, click Next button</li>
+                            <li>Select the role which was created before, click Next.</li>
+                            <li>Run on demand, Next.</li>
+                            <li>Select “sampledb” then click Next</li>
+                            <li>Last control and Finish it.</li>
+                          </ul>
+                          <p>As you see the crawler was created. “Run it now”. What we have done so far ? By running this crawler, 
+                            we will take .json into the Glue. After crawler completed, you will see one in the “Tables added” column. 
+                            clickstream+0+0000000000.json is on the Glue platform. You can see “data” table in the Tables section.</p>
+                          
+                            <b>Set Up Athena</b>
+                            <p>AWS handles all these tasks for you and we can query this json by using Athena.</p>
+                            <span>If you complete all these steps, you will see “sampledb” and its table (data) on the left side. 
+                              You can list 10 records by using “Preview table” option</span>
+                              <span class="row cli">
+                                <span  class="cmd  col-sm-12">
+                                Select * From "sampledb"."data" limit 10;</span>
+                                </span>
+
+                              <p>As you see, we can query a json file by using S3, Glue and Athena. Because of the scalable AWS architecture, 
+                                the query costs are very low. If you have a question, click "Ask me".</p>
+                      </div>
+
+        </div>
+
+        <!-- https://medium.com/@ketulsheth2/streaming-data-pipeline-using-kafka-ksql-influxdb-and-grafana-8a934569fcb9 -->
+        <!-- https://medium.com/analytics-vidhya/how-to-store-and-real-time-analysis-of-clickstream-data-e8460467aa88 -->
+
+        <!-- http://divolte-releases.s3-website-eu-west-1.amazonaws.com/divolte-collector/0.5.0/userdoc/html/getting_started.html -->
+      
+         <!--    https://docs.confluent.io/platform/current/tutorials/examples/clickstream/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clickstream -->
+        <!-- https://godatadriven.com/blog/real-time-analytics-divolte-kafka-druid-superset/ -->
+        <!-- https://medium.com/@ugurekmekci/real-time-user-activity-tracking-w-divolte-collector-and-kafka-d8c106313400 -->
+        <!-- https://blog.ona.io/general/2017/08/30/streaming-ona-data-with-nifi-kafka-druid-and-superset.html -->
+    </div>
+    
+
+
+
+
+</div>

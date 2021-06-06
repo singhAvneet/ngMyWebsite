@@ -1,0 +1,103 @@
+ 
+@import '../app.component.scss';
+
+
+.image {
+  opacity: inherit;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: none;
+  @media screen and (min-width: $--minpad) { 
+   display: flex;
+  }
+}
+
+.img1{
+  background-image: url($--img-url+'/explore/avneet/ar1.jpg');
+}
+.img2{
+  background-image: url($--img-url+'/explore/avneet/ar2.jpg');
+}
+.img3{
+  background-image: url($--img-url+'/explore/avneet/ar3.jpg');
+}
+
+
+
+.explore{    
+
+    margin-bottom:8%;
+  
+
+}
+
+
+  p{
+      font-size: 12px;
+ }
+
+
+
+
+  .article-fluid{
+      margin:25% auto 10% auto;
+      font-size: 15px;
+
+  }
+
+  
+  .article {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    margin: 6em 0 2em 0;
+  }
+
+
+
+
+
+
+
+
+
+  .about-article{
+text-align: inherit;
+  }
+.about-article a{
+  text-decoration: none;
+}
+.about-article a.underline h2:hover{
+  color: #000000;
+}
+
+ 
+
+@media only screen and (min-width: $--minpad) {  
+  .article-fluid{
+      margin-top:10%;
+      font: 400 18px Lato, sans-serif;
+      height:100%;
+    
+    line-height: 1.8;
+    color: $--main-bg-color;
+    .row{
+      margin: 0 0 4em 0;
+    }
+  }
+  .about-article{
+    .row{
+      margin: 0 0 8em 0;
+    }   
+      }
+
+
+}
+
+
+
+
+.bg{ 
+  background-image: url($--img-url+'/explore/avneet/we1.jpg');
+  background-position: center;
+}
+

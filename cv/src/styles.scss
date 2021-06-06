@@ -1,0 +1,181 @@
+@import '~bootstrap/scss/bootstrap';
+@import 'app/variable'; 
+
+    
+
+
+   .container {
+    padding-top: 2em; 
+  
+  }
+   
+
+
+   
+body,html {
+    height:100%;
+    overflow-y: overlay;   
+  }
+   
+   body {
+         font: 400 15px Verdana, sans-serif;   
+         line-height: 1.8;
+         color: $--main-bg-color;
+     }
+
+   h2 {
+    font-size: 20px;
+    font-weight: 600;
+    text-transform: uppercase;    
+}
+    
+
+  
+  
+     
+     .navbar {
+         background-color: $--main-bg-color;
+         z-index: 9999;
+         letter-spacing: 4px; 
+         height:auto;       
+         a{ color:white;}
+         .btn{
+            height: 3.7em;
+            padding: 1em;
+             border-radius: 0;
+             width:100%
+            };
+      
+        .navbar-collapse{
+            position: relative;           
+        };
+
+
+     }
+    
+     .navbar-nav li a:hover, .navbar-nav li.active a {
+         color: $--main-bg-color !important;
+         background-color: white !important;
+         box-shadow: none;
+     }
+   
+
+    
+        .navbar-nav{
+            flex-direction: row
+        }
+ 
+        .navClass,.tablink {
+            width:100%
+        }
+
+
+
+        .about-image {
+            position :relative;          
+            background-repeat: no-repeat;
+            background-size: cover;      
+            height: 35%;
+            margin-top:8%;
+            @media screen and (min-width: $--maxpad) { 
+                margin-top:5%
+              }
+          }
+          .bg{
+        //   filter: grayscale(100%) ;
+        //   opacity: 0.6; 
+          height:35vh  ;
+          }
+
+        @media screen and (min-width: $--minpad) {
+
+            .navClass{
+                width:auto
+            }
+            .tablink {
+                width:100%
+            }
+
+            .navbar{
+                height:4em;
+                .navbar-collapse{
+                    position: inherit;
+                    right: 5em;
+                }
+            }          
+
+                   
+        }
+
+
+
+        .link{    
+          cursor: pointer;
+          line-height: 1em;
+          color: $--link-color;
+          text-decoration: none;
+          font-weight: bold;
+          
+        }
+        .link:hover {
+            color:$--main-bg-color;
+          }
+     p {
+        .cli{
+            padding: 0 1em;
+        }
+     }  
+.cmd{
+
+    border-radius: 10px;
+    background: aliceblue;
+    line-height: 4em;
+}
+
+
+.button:hover,.read-more p:hover{
+    opacity:1!important   
+  }
+
+  
+  .button{
+      width:100%;
+      padding: 1em;
+      opacity: 0.8!important;
+      background-color:  $--main-bg-color !important;
+      color: #ffff!important;
+      font-variant: all-small-caps;
+      font-size: 1em;
+      cursor: pointer;
+  }
+
+
+
+//  .read-more p{
+//   border: 1px solid $--main-bg-color;
+//   padding: 1em;
+//   color: $--main-bg-color;
+//   font-variant: all-small-caps;
+//   margin:0;
+//   width:100%;
+//   border-radius: 10px;
+//   font-size: 1em;
+//   @media screen and (min-width:$--minpad) { 
+//     width: fit-content;
+//     margin: 3em 0 0 57%;
+//    }
+   
+//   }
+
+
+       
+
+
+
+
+      
+      
+
+
+
+     

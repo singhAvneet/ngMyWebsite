@@ -1,0 +1,22 @@
+
+<nav class="navbar navbar-expand-lg navbar-dark   fixed-top"   (click)="toggleNavbar()">
+
+  <a class="navbar-brand" routerLink="/about" >
+Avneet  </a>
+
+  <button class="navbar-toggler" type="button" aria-label="toggle">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+
+  <div class="collapse navbar-collapse" [ngClass]="{ 'show': navbarOpen }">
+    <ul class="nav navbar-nav" id="nav-barId">
+
+      <li [className]="active=='about' ? 'navClass active':'navClass'"><a class="tabClass btn"   routerLink="/about" >HOME</a></li>
+      <li [className]="active=='tutorials' ? 'navClass active':'navClass'"><a class="tabClass btn"    routerLink="/tutorials" >EXPLORE</a></li>
+      <li [className]="active=='testimonial' ? 'navClass active':'navClass'"><a class="tabClass btn"  routerLink="/testimonial" > IAM</a></li>
+      <li [className]="active=='contact' ? 'navClass active':'navClass'"><a class="tabClass btn"   routerLink="/contact" >CONTACT</a></li>
+    </ul>
+  </div>
+</nav>
+

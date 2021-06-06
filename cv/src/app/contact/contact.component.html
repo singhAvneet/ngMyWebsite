@@ -1,0 +1,79 @@
+<div  id="ngDiv">
+  <div class=" about-image bg" > </div>  
+  <div  class="container about">     
+                      <div class="row">                          
+                          <div class="col-sm-12 " > 
+                            <h2 class="text-center">Get in touch!</h2>
+
+
+                                  <div class="form">
+                                    <div *ngIf="!submitted">
+                                      <h2>Send me a message:</h2>
+                                      <form (ngSubmit)="onSubmit(model)" #heroForm="ngForm">
+                                        <div class="row" >                      
+                                        
+
+                                     
+                                        <div class=" col-sm-12 col-lg-6">
+                                        
+                                          <div class="fields form-group">
+                                            <label for="name">Name</label>
+                                            <input type="text" class="form-control" id="name" required [(ngModel)]="model.name" name="name" #name="ngModel"  pattern="[a-zA-Z ]*">
+                                            <div [hidden]="(name.valid && (name.dirty || name.touched)) || name.pristine" class="alert alert-danger">Name is required </div>
+                                         </div>
+                                              
+                                         
+                                         
+                                          <div class="fields form-group">
+                                            <label for="email">Email</label>
+                                          <input type="email" class="form-control" id="email" required [(ngModel)]="model.from" name="email" #email="ngModel" ngModel email pattern="^[a-z0-9._%+-)(=&^$!?]+@[a-z0-9.-]+\.[a-z]{2,40}$">
+                                          <div [hidden]="(email.valid && (name.dirty || name.touched)) || email.pristine" class="alert alert-danger">Email is required</div>
+                                          </div>
+                                        </div>
+
+
+                                        <div class=" col-sm-12 col-lg-6">
+                                          <label for="message">Message</label>
+                                          <div class="fields form-group">
+                                            <textarea type="text" class="form-control" id="message" required [(ngModel)]="model.body" name="message" #message="ngModel" style="height:16.5vh" pattern="[a-zA-Z 0-9._)(&!?]*"></textarea>
+                                            <div [hidden]="(message.valid && (message.dirty || message.touched)) || message.pristine" class="alert alert-danger">Message is required</div>
+                                          </div>
+                                        </div>
+
+                                      </div>  
+
+
+                                        <button type="submit" class="col-sm-6  button btn btn-light" [disabled]="!heroForm.form.valid" style="margin-top: 3%;">Submit</button>
+
+
+                                       
+                                       
+                                      </form>
+                                    </div>
+                                  
+                                    <div *ngIf="submitted" >
+                                      <h2>Thank you for contacting:</h2>
+                                      <div class="ebg">
+                                        <img src="http://localhost:4201/explore/email.svg" alt="solution archietect" width="100%" >                                        
+                                      </div>                                  
+                                
+
+                                      <br>
+                                      <button type="submit" class=" left col-sm-6 left
+                                      button btn btn-light"  style="margin-top: 3%;" (click)="submitted=false">Send New</button>
+                                      
+                                    </div>
+                                  </div>
+
+
+                            
+
+                          </div>                         
+                       </div>        
+
+                          
+  </div>
+  
+  <app-ask></app-ask>
+
+</div>
