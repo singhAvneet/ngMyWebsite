@@ -11,20 +11,14 @@ export class WebComponentService {
   getNgElements(name: string): Observable<NgElementInfo[]> {
     return of([
       {
-        name: 'explore-app',
-        src: 'http://127.0.0.1:4201/explore/explore-app.js',
+        name: 'explore',
+        src: 'http://127.0.0.1:4201/explore/avneet/explore-app.js',
         tagName: 'explore-app',
         paramName: 'explore'
-      },
-      {
-        name: 'debezium-app',
-        src: 'http://127.0.0.1:4201/explore/debezium-app.js',
-        tagName: 'debezium-app',
-        paramName: 'dbz'
       }
     ]);
   }
-
+  // http://127.0.0.1:4201/explore/TestComponent/game-wc.js'
 
   
 }

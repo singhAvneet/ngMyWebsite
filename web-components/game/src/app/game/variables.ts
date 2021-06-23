@@ -1,5 +1,5 @@
 
-const docElement = document.documentElement
+
 
   export class initAssest2 {
     player;
@@ -23,8 +23,9 @@ const docElement = document.documentElement
     brand;
     keys;
     btnJ;
-    restart;
     quit: Phaser.GameObjects.Text;
+    restart: Phaser.GameObjects.Text;
+    start: Phaser.GameObjects.Text;
     stick;
     pad;
     move;

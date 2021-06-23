@@ -1,25 +1,28 @@
-import { Component, OnInit } from '@angular/core';
-import  'phaser';
+import {   Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+
 import { WelcomeScene } from "./states/welcomeScene";
 import { GameScene } from "./states/gameScene";
 import { Preload } from "./states/preload";
+import { Game, Scale, Types, WEBGL } from 'phaser';
 
 @Component({
   selector: 'game-app',
   templateUrl: './g.component.html',
-  styleUrls: ['./g.component.css']
+  styleUrls: ['./g.component.css'],
+  encapsulation: ViewEncapsulation.ShadowDom
 })
 
-export class GameComponent implements OnInit {
-  phaserGame: Phaser.Game;
-  config: Phaser.Types.Core.GameConfig;
+export class GameComponent implements OnInit ,OnDestroy {
+  phaserGame: Game;
+  config: Types.Core.GameConfig;
   constructor() {
     this.config = {
-      type: Phaser.AUTO,
+      type: WEBGL,
+      parent:'game-area',    
       height: 600,
       width: 800,
       scene: [ WelcomeScene, GameScene,Preload],
-      parent:'game-area',
+  
       physics: {
         default: 'arcade',
         arcade: {
@@ -27,15 +30,42 @@ export class GameComponent implements OnInit {
         }
       },
       scale: {
-        mode: Phaser.Scale.FIT,
-        autoCenter: Phaser.Scale.CENTER_BOTH,
-        zoom: 2
-      }
+        parent:'game-area',
+        mode: Scale.ScaleModes.FIT,
+        autoCenter: Scale.CENTER_BOTH,
+
+      },
+      render: {
+        antialiasGL: false,
+        pixelArt: true,
+      },
+      autoFocus: true,
+      canvasStyle: `display: block; width: 100%; height:auto;max-width: 800px; max-height: 600px;`,
     };
   }
-  ngOnInit() {
-    this.phaserGame = new Phaser.Game(this.config);
+
+
+
+  
+  ngOnDestroy(): void {
+    this.phaserGame.destroy(true, false);
+    var element = document.getElementsByTagName("canvas"), index;
+    element[0].parentNode.removeChild(element[0]);
   }
+  ngOnInit() {
+
+  document.body.setAttribute('style',' background-color: rgba(0,0,0,0.4);pointer-events :none;')
+
+    this.phaserGame = new Phaser.Game(this.config);  
+  
+  }
+
+
+
+
+
+
+
 }
 
 

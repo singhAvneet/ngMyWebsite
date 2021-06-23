@@ -1,6 +1,7 @@
 
+import {  Physics } from 'phaser';
 
-export  default class Actor extends Phaser.Physics.Arcade.Sprite {
+export  default class Actor extends Physics.Arcade.Sprite {
 ass;
   constructor ({ scene, x, y, asset, scale,bounce }) {
     super(scene, x, y, asset)

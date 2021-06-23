@@ -9,7 +9,7 @@ const routes: Routes = [
   {path:'exp/dbz',component:DebeziumComponent},
   {path:'exp/dv',component:DivolteComponent},
   {path:'exp/seo',component:SeoComponent},
-  {path:'',component:TutorialsComponent},
+  {path:'tutorials',component:TutorialsComponent},
 
 ];
 
@@ -22,5 +22,5 @@ export const routingComponents = [
   DebeziumComponent,
   DivolteComponent,
   SeoComponent,
-  TutorialsComponent, 
+  TutorialsComponent
 ];

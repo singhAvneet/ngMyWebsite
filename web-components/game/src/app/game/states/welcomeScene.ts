@@ -1,10 +1,12 @@
 
 import * as Assest from '../variables';
+import { GameObjects, Scene } from 'phaser';
+import Helper from '../sprites/helper';
 
-export class WelcomeScene extends Phaser.Scene {
-  title: Phaser.GameObjects.Text;
-  start: Phaser.GameObjects.Text;
-
+export class WelcomeScene extends Scene {
+  title: GameObjects.Text;
+  // start: GameObjects.Text;
+  // exit: GameObjects.Text;
 
   constructor() {
     super({
@@ -33,26 +35,14 @@ export class WelcomeScene extends Phaser.Scene {
     Assest.default.assets.brand = this.add.sprite(400, 200, 'brand').setScale(4);
     Assest.default.music = this.sound.add('music');
 
+    Assest.default.assets.start = this.add.text(370, 300, 'Start', { fontFamily: ' Tahoma ,   sans-serif', fontSize: '3em',color:'#CCEFD9'});
+    Assest.default.assets.quit = this.add.text(745, 570, 'Exit', { fontFamily: ' Tahoma ,   sans-serif', fontSize: '2em',color:'#CCEFD9' });
 
+    new Helper().addButtonListerners(Assest.default,this,'welcome')
 
-    this.start = this.add.text(370, 300, 'Start',
-      { fontFamily: ' Arial ,   sans-serif', fontSize: '3em' });
-   this.add.text(380, 385, 'Jump',
-      { fontFamily: ' Arial ,   sans-serif', fontSize: '12px' });
-      this.add.text(460,450, 'Right',
-      { fontFamily: ' Arial ,   sans-serif', fontSize: '12px' });
-      this.add.text(310,450, 'Left',
-      { fontFamily: ' Arial ,   sans-serif', fontSize: '12px' });
-
-    this.start.setInteractive();
-    this.start.on('pointerdown', function () {
-      Assest.default.music.play();
-      Assest.default.assets.brand.destroy();
-      Assest.default.assets.keys.destroy();
-      Assest.default.music.loop = true;
-
-      this.scene.start("Preload");
-    }, this);
+    this.add.text(380, 385, 'Jump',  { fontFamily: ' Tahoma ,   sans-serif', fontSize: '12px' });
+    this.add.text(460, 450, 'Right',  { fontFamily: ' Tahoma ,   sans-serif', fontSize: '12px' });
+    this.add.text(310, 450, 'Left',   { fontFamily: ' Tahoma ,   sans-serif', fontSize: '12px' }); 
 
   }
 };

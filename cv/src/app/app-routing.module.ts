@@ -10,12 +10,13 @@ const appRoutes:Routes=[
     {path:'tutorials',component:TutorialsComponent},
     {path:'testimonial',component:TestimonialComponent},
     {path:'contact',component:ContactComponent}, 
-    {path:'**',component:AboutComponent}
+    {path:'exp/seo',component:TutorialsComponent},
+    // {path:'**',component:AboutComponent}
 
     ];
 @NgModule({
 
-    imports:[  RouterModule.forRoot(appRoutes, { useHash: true })],
+    imports:[  RouterModule.forRoot(appRoutes, { anchorScrolling: 'enabled' })],
     exports:[RouterModule]
    
 })
@@ -23,3 +24,10 @@ export class appRoutiingModule {
 
 
 }
+
+export const routingComponents = [
+    AboutComponent,
+    TutorialsComponent,
+    TestimonialComponent,
+    ContactComponent
+  ];

@@ -1,28 +1,40 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule ,Injector,DoBootstrap } from '@angular/core';
+import { ModalModule } from 'ngx-bootstrap/modal';  
+import {MatDialogModule} from '@angular/material/dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+
+import { NgModule, DoBootstrap, Injector ,CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import  { createCustomElement } from '@angular/elements';
-
-
+import { AppComponent } from './app.component';
 import { GameComponent } from './game/g.component';
-import {AppComponent}from './app.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     GameComponent
+    
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    ModalModule.forRoot(),
+    MatDialogModule,
+    BrowserAnimationsModule
   ],
+  bootstrap: [],
+  entryComponents:[AppComponent,MatDialogModule]
 
-  bootstrap: [AppComponent],
-  entryComponents:[AppComponent],
 })
 export class AppModule implements DoBootstrap{
-  constructor(private injector: Injector) {  }
+  constructor(private injector: Injector) {
+    const element = createCustomElement(AppComponent, { injector:this.injector });
+    if (!customElements.get('game-wc')) {      
+      customElements.define('game-wc' , element);
+   }
+
+    }
 
   ngDoBootstrap() {
-    const explore = createCustomElement(AppComponent, { injector:this.injector });
-    customElements.define('game-wc' , explore);
+
   }
  }

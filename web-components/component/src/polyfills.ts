@@ -14,6 +14,9 @@
  * Learn more in https://angular.io/guide/browser-support
  */
 
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { AppModule } from './app/app.module';
+
 /***************************************************************************************************
  * BROWSER POLYFILLS
  */
@@ -55,9 +58,27 @@
 /***************************************************************************************************
  * Zone JS is required by default for Angular itself.
  */
-import 'zone.js/dist/zone';  // Included with Angular CLI.
+// import 'zone.js/dist/zone';  
 
 
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+
+
+
+ const loadApp = () => {
+    platformBrowserDynamic().bootstrapModule(AppModule)
+      .catch(err => console.log(err));
+  }
+  
+  if(window['Zone'] === undefined) {
+    console.log('Unable to find zone, so loading one...');
+    import('zone.js/dist/zone').then(() => {
+      loadApp();
+    });
+  }else {
+    console.log('Found an existing Zone, so just reusing it')
+    loadApp();
+    
+  }

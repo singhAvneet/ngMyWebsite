@@ -1,7 +1,9 @@
 import * as Assest from '../variables';
 import Helper from '../sprites/helper';
 import Actor from '../sprites/actor';
-export class GameScene extends Phaser.Scene {
+import {  Scene } from 'phaser';
+
+export class GameScene extends Scene {
 
   helper: Helper;
   isItReadyToDrive:boolean;
@@ -22,9 +24,9 @@ export class GameScene extends Phaser.Scene {
     Assest.default.assets.cursors = this.input.keyboard.createCursorKeys();
     Assest.default.assets.platforms = this.physics.add.staticGroup();
 
-    Assest.default.assets.scoreText = this.add.text(16, 16, 'SCORE: 0', { fontSize: '3em' });
-    Assest.default.assets.quit = this.add.text(750, 570, 'Exit', {fontFamily:' Arial ,   sans-serif',fontSize:'2em'});
-  
+    Assest.default.assets.scoreText = this.add.text(16, 16, 'SCORE: 0', { fontFamily:' Tahoma ,   sans-serif',fontSize: '3em', });
+    Assest.default.assets.restart = this.add.text(650, 570, 'Restart', {fontFamily:' Tahoma ,   sans-serif',fontSize:'2em',color:'#CCEFD9'});
+    Assest.default.assets.quit = this.add.text(745, 570, 'Exit', { fontFamily: ' Tahoma ,   sans-serif', fontSize: '2em',color:'#CCEFD9' });  
   }
 
   preload() {
@@ -60,7 +62,7 @@ export class GameScene extends Phaser.Scene {
 
     
 
-    Assest.default.assets.quit.setInteractive();
+  
  
 
     Assest.default.assets.player = new Actor({ scene: this, x: 0, y: 50, asset: 'dude', scale: 3, bounce: 0.2 });
@@ -79,7 +81,7 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.collider(Assest.default.assets.player, Assest.default.assets.dooor);
     this.physics.add.collider(Assest.default.assets.enemy, Assest.default.assets.platforms);
 
-    this.helper.addButtonListerners(Assest.default.assets);
+    this.helper.addButtonListerners(Assest.default,this,'game');
     this.helper.addAnimation(this);
 
     Assest.default.assets.dooor.anims.play('doorClose');
@@ -155,7 +157,7 @@ export class GameScene extends Phaser.Scene {
 
   private killPlayer(player, star) {
     player.disableBody(true, true);
-    this.add.text(250, 150, 'GAME OVER', {fontFamily:' Arial ,   sans-serif', fontSize: '5em',backgroundColor:'#000'})
+    this.add.text(250, 135, 'GAME OVER', {fontFamily:' Arial ,   sans-serif', fontSize: '5em',backgroundColor:'#000'})
     
     Assest.default.assets.over.play();
     Assest.default.music.stop();
@@ -200,7 +202,7 @@ export class GameScene extends Phaser.Scene {
       Assest.default.assets.win = true;
       dooor.anims.play('doorOpen');
       player.destroy();
-      this.add.text(300, 150, 'You Win', {fontFamily:' Arial ,   sans-serif', fontSize: '5em',backgroundColor:'#000'})
+      this.add.text(300, 135, 'You Win', {fontFamily:' Arial ,   sans-serif', fontSize: '5em',backgroundColor:'#000'});
     
       // Assest.default.airplatform.forEach(function (element) { element.destroy(); });
       Assest.default.music.stop();

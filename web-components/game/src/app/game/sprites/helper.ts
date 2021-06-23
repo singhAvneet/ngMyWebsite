@@ -3,15 +3,16 @@
 
 import * as Assest from '../variables';
 
-
 export default class Helper {
+    // scene:Scene=new Scene('WelcomeScene');
 
-    createPlatform(x:number,y:number,size:number,assets:string):any { 
-       return Assest.default.assets.platforms.create(x, y, assets).setScale(size).refreshBody(); 
+
+    createPlatform(x: number, y: number, size: number, assets: string): any {
+        return Assest.default.assets.platforms.create(x, y, assets).setScale(size).refreshBody();
     }
 
 
-    addButtonListerners(This) {
+    addButtonListerners(This, game, scene) {
         // This.btnL.on('pointerup', function (pointer) {
         //     This.move = "stop";
         //     this.anims.play('buttonUp', true);
@@ -25,11 +26,32 @@ export default class Helper {
         // This.restart.on('pointerdown', function (pointer) {
         //     Assest.default.music.loop = false;
         // });
+        // new SwitchScene().addButtonListerners(This)
 
-        This.quit.on('pointerdown', function () {
+        if (scene == 'welcome') {
+            This.assets.start.setInteractive()
+            This.assets.start.on('pointerdown', function () {
+                This.music.play();
+                This.assets.brand.destroy();
+                This.assets.keys.destroy();
+                This.music.loop = true;
+
+                game.scene.start("Preload");
+            }, this);
+        }
+        if (scene == 'game') {
+            This.assets.restart.setInteractive()
+            This.assets.restart.on('pointerdown', function () {
+                This.music.stop();
+                game.scene.start("WelcomeScene");
+            }, this);
+
+        }
+
+
+        This.assets.quit.setInteractive()
+        This.assets.quit.on('pointerdown', function () {
             location.reload();
-
-
         }, this);
 
 
@@ -41,7 +63,7 @@ export default class Helper {
 
 
     addAnimation(This) {
-     
+
         // This.anims.create({
         //     key: 'buttonUp',
         //     frames: [{ key: 'btn', frame: 1 }]
@@ -93,7 +115,7 @@ export default class Helper {
             repeat: -1,
 
         });
-      
+
 
 
 

@@ -1,92 +1,676 @@
-<div  id="ngDiv">
-  <div class=" about-image bg" > </div>  
-  <div  class="container about">
- 
+<div id="ngDiv">
+  <div class=" about-image bg"> </div>
+  <div class="container about">
 
-          
 
-          <div class="row explore">          
-            <div class="col-sm-12 about-article " >              
-                <h2>WHO'S MOST IMPORTANT, CEO OR SEO?</h2>
-                <p>March 06, 2021</p>
-                <hr>
-                <p>
-                  How we deliver content to our users really matters. We make sure that using web components on our sites and apps wouldn’t negatively 
-                  impact the SEO performance of our pages. In order to experiment this, I built quite heavy micro frontend component, that uses core Angular Elements feature and 
-                  you can have a look at the final running application’s performance yourself.
-                </p>           
-                  In this session, We will walk through the following:
-                  <ul>                   
-                    <li>Create custom element</li>
-                    <li>Embedded Reusable element in your web app</li>     
-                    <li>Play Games</li>              
-                  </ul>
-                  
-                   <hr>
-                   <h2>Summary</h2>
-                   <ul>
-                     <li>Case Study</li>
-                     <li>Prerequisite</li>
-                     <li>Technologies</li>
-                     <li>Demo</li>
-                     <li>Micro Apps as Web Components with Angular Elements</li>
-                     <li>Communication between Micro Apps</li>
-                     <li>Dynamically Loading Micro Apps</li>
-                     <li>Evaluation</li>                    
-                   </ul>
-                  
-                   <hr>
-                   <h2>Case Study</h2>
-                  <p>Regardless of programming language, experts from development teams builds various different micro frontend web components 
-                    . Once they commit/push any change in Git, the CI/CD pipeline
-                     re-deploy docker pods in container-orchestration. On the other hand our's shell web app dynamically 
-                     download those components from kubernetes and render it during runtime. 
-                     Moreover, the shell and Kafka-Rest api takes care about routing between the components and allows them 
-                    to inter-communicate with each other using message passing stream (Kafka) and websockets.
-                  </p>
-                  <div style="padding:5em">
-                    <img src="http://localhost:4201/explore/avneet/web/web.svg" alt="solution archietect" width="100%" >
-                  </div>
-                  
-                  <hr>
-                  <h2>Prerequisite</h2>
-                  <h5>Node</h5>
-                  <p>Download the <a class="link" href="https://nodejs.org/en/download/">Node.js</a> source 
-                    code or a pre-built installer for your platform
-                  </p>
 
-                  <hr>
-                  <h2>Technologies</h2>
-                  <h5>Node</h5>
-                  <p>
-                    <b>Node.js</b> is an open-source, cross-platform, back-end JavaScript runtime environment that runs on the V8 engine and executes.       
-                  </p>
-                  <h5>Kubernetes</h5>
-                  <p>
-                  <b>Kubernetes</b> is an open-source container-orchestration system for automating computer application deployment, scaling, and management.
-                  </p>
-                  <h5>Angular</h5>
-                  <p>
-                  <b>Angular</b> is a TypeScript-based open-source web application framework led by the Angular Team at Google and by a community of individuals and corporations. 
-                  It is a complete rewrite from the same team that built AngularJS.
-                  </p>
-                  <h5>WebSockets</h5>
-                  <p>
-                    <b>WebSocket</b> is a computer communications protocol, providing full-duplex communication channels over a single TCP connection
-                  </p>
-                  <hr>
-                  <h2>Demo</h2>
-              <div id="game"></div>
-                
-            </div>
+
+    <div class="row explore">
+      <div class="col-sm-12 about-article ">
+        <h2>WHO'S MOST IMPORTANT, CEO OR SEO?</h2>
+        <p>March 06, 2021</p>
+        <hr>
+        <p>
+          How we deliver content to our users really matters. We make sure that using web components on our sites and
+          apps wouldn’t negatively
+          impact the SEO performance of our pages. In order to experiment this, I built quite heavy micro frontend
+          component, that uses core Angular Elements feature and
+          you can have a look at the final running application’s performance yourself. 
+          Web Components are true Micro Services and Micro Apps. They enable parts of applications to be deployed, not just as services but also to be integrated into other applications.
+        </p>
+        In this session, We will walk through the following:
+        <ul>
+          <li>Play Games</li>
+          <li>Create custom element</li>
+          <li>Embedded Reusable element in your web app</li>
+          <li>set up inter-web component data exchange</li>
+        </ul>
+
+        <hr>
+        <h2>Summary</h2>
+        <ul>
+          <li>Case Study</li>
+          <li>Prerequisite</li>
+          <li>Technologies</li>
+          <li>Demo</li>
+          <li>Micro Apps as Web Components with Angular Elements</li>
+          <li>Dynamically Loading Micro Apps</li>         
+          <li>Communication between Micro Apps</li>
+          <li>Evaluation</li>
+        </ul>
+
+        <hr>
+        <h2>Case Study</h2>
+        <p>Regardless of programming language, experts from development teams builds various different micro frontend
+          web components
+          . Once they commit/push any change in Git, the CI/CD pipeline
+          re-deploy docker pods in container-orchestration. On the other hand our's shell web app dynamically
+          download those components from kubernetes and render it during runtime.
+          Moreover, the shell and Kafka-Rest api takes care about routing between the components and allows them
+          to inter-communicate with each other using message passing stream (Kafka) and websockets.
+        </p>
+        <div>
+          <img src="http://localhost:4201/explore/avneet/web/web.svg" alt="solution archietect" width="100%">
         </div>
+
+        <hr>
+        <h2>Prerequisite</h2>
+        <h5>Node</h5>
+        <p>Download the <a class="link" href="https://nodejs.org/en/download/">Node.js</a> source
+          code or a pre-built installer for your platform
+        </p>
+
+        <hr>
+        <h2>Technologies</h2>
+        <h5>Node</h5>
+        <p>
+          <b>Node.js</b> is an open-source, cross-platform, back-end JavaScript runtime environment that runs on the V8
+          engine and executes.
+        </p>
+        <h5>Kubernetes</h5>
+        <p>
+          <b>Kubernetes</b> is an open-source container-orchestration system for automating computer application
+          deployment, scaling, and management.
+        </p>
+        <h5>Angular</h5>
+        <p>
+          <b>Angular</b> is a TypeScript-based open-source web application framework led by the Angular Team at Google
+          and by a community of individuals and corporations.
+          It is a complete rewrite from the same team that built AngularJS.
+        </p>
+        <h5>WebSockets</h5>
+        <p>
+          <b>WebSocket</b> is a computer communications protocol, providing full-duplex communication channels over a
+          single TCP connection
+        </p>
+        <hr>
+        <h2>Game Demo</h2>
+        <p>Let me present a working online demo of this SPA. This game demo hints at the many benefits of using micro frontends - multiple teams working in parallel and independently supporting complex SPAs. 
+          The code for the game apps is in separate repository. Check out the full working game demo component below!</p>
+        <div class="row ">
+          <div class="col-sm-12  " style="text-align: center;">
+            <game-app></game-app>
+          </div>
+        </div>
+        <br>
+        <p>
+          If you are curious to know, that I am using Shadow DOM feature of web components so that i can prevent the leakage of styles and keeping it completely isolated.
+        </p>
+        <hr>
+        <h2>Micro Apps as Web Components with Angular Elements</h2>
+        <p>
+          Let's install <b>@angular/elements</b> you just need to declare your Angular Component with a module
+          and add it into the entryComponents array. EntryComponent helps to create Angular Elements dynamically at
+          runtime.
+          Than we will wrap the component using createCustomElement and register it as a custom element
+          with the browser using its customElements.define method:
+        </p>
+        <span class="row cli">
+          <span class=" cmd  col-sm-12">
+            npm i @angular/elements @webcomponents/custom-elements -D
+          </span>
+        </span>
+
+        <h5> Edit app.module.ts</h5>
+        <p>
+          Edit this file to define the custom element using createCustomElement, which will contain our AppComponent:
+        </p>
+        <span class="row cli">
+          <pre class=" cmd  col-sm-12">
+import {{ '{' }}  createCustomElement } from '@angular/elements';
+import {{ '{' }} NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+[...]
+
+@NgModule({{ '{' }} 
+  declarations: [AppComponent],
+  imports: [BrowserModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  bootstrap: [],
+  entryComponents: [
+    AppComponent,
+    ClientAWidgetComponent
+  ]
+})
+export class AppModule {{ '{' }}  
+  constructor(private injector: Injector) {{ '{' }}   }
+
+  ngDoBootstrap() {{ '{' }} 
+    const appElement = createCustomElement(AppComponent, {{ '{' }}  injector: this.injector})
+    customElements.define('app-root', appElement);
+  }
+}</pre>
+        </span>
+        <p>
+          The AppModule above does not bootstrap a traditional Angular component. Hence, the bootstrap array is
+          empty and we need to introduce an ngDoBootstrap method intended for manual bootstrapping. We also need to
+          register the CUSTOM_ELEMENTS_SCHEMA to inform Angular compiler that there will be component it might not
+          aware of so that they can directly executed by the browser.
+        </p>
+        <p>
+          We also need a polyfill for browsers that don't support Web Components.
+          Hence, I've npm installed @webcomponents/custom-elements and referenced it at the end of the polyfills.ts
+          file:
+        </p>
+        <span class="row cli">
+          <span class=" cmd  col-sm-12">
+            import '@webcomponents/custom-elements/custom-elements.min';
+            import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js';
+          </span>
+        </span>
+        <p>
+          You may also want to remove <b>zone.js</b> if your custom element is going to live inside another angular
+          application.
+          However, you can only have one version of this file on a page, so if you are including this angular element in
+          a parent
+          angular application, you probably don’t want it in your custom element build. For absolute clarity we are
+          going to remove zone.js
+          (as we will be using this in another angular app) and leave in the web component polyfill as it will be the
+          only custom element on
+          the pag. but you do what you need to do!
+        </p>
+        <h5> Configure build</h5>
+        <p>
+          If you run ng build, your application should build successfully but to export our application as a custom
+          element, we ideally want to
+          have a single JS file e.g. custom-element.js. There is a way to combine multiple dist files natively within
+          angular, so I’ve had to
+          add a couple of extra scripts in package.json.
+        </p>
+        <span class="row cli">
+          <pre class=" cmd  col-sm-12">
+{{ '{' }} 
+  "name": "custom-element",
+  "version": "0.0.0",
+  "scripts": {{ '{' }} 
+    "el-build": "npm run el-build-task && npm run el-package-task",
+    "el-build-task": "ng build custom-element --prod --output-hashing=none",
+    "el-package-task": "cat ./dist/custom-element/{{ '{' }} polyfills,runtime,main}.js > ./dist/custom-element.js"
+  }
+}</pre>
+        </span>
+        <p>
+          Now if you run npm run el-build, you should see a custom-element.js file in the dist folder, once it has
+          compiled.
+        </p>
+        <h5> That's it</h5>
+
+        <p>
+          To use your new custom element, serve a static index.html and reference the new custom-element.js in a script
+          tag and include
+          your custom tag as an HTML element in the body of the page.
+        </p>
+
+        <hr>
+        <h2>Dynamically Loading Micro Apps</h2>
+        <p>
+          As web components work as traditional html elements, we can dynamically load them into our app using DOM. For
+          this task, I've created
+          a simple configuration object pointing to all the data we need:
+        </p>
+        <span class="row cli">
+          <pre class=" cmd  col-sm-12">
+@Injectable()
+export class WebComponentService {{ '{' }}
+  constructor() {{ '{' }} }
+
+  getNgElements(name: string): Observable {{ '{' }}
+    return of([
+    {{ '{' }}
+        name: 'app',
+        src: 'dist/custom-element.js',
+        tagName: 'app-root',
+        paramName: 'app'
+      }
+    ]);
+  }  
+}</pre>
+        </span>
+        <p>
+          To load one of those clients, we just need to create a script tag pointing to its bundle and an element
+          representing the micro app:
+        </p>
+        <span class="row cli">
+          <pre class=" cmd  col-sm-12">
+import {{ '{' }}  WebComponentService } from './app.service';
+import {{ '{' }}  NgElementInfo } from '../interface/ng-element-info';
+
+interface Scripts {{ '{' }} 
+  name: string;
+  src: string;
+}    
+declare var document: any;    
+@Injectable()
+export class DynamicScriptLoaderService {{ '{' }}     
+  private scripts: any = {{ '{' }} };
+  private ngElementStore: NgElementInfo[] = [];    
+  constructor(private elementAddressService: WebComponentService      
+    ) {{ '{' }}    }
+
+  loadScript(name: string, pid: string) {{ '{' }} 
+    this.elementAddressService.getNgElements(name)
+        .subscribe(x => {{ '{' }} 
+          this.ngElementStore = x;
+          this.ngElementStore.forEach((ngElementInfo: NgElementInfo) => {{ '{' }} 
+            if (ngElementInfo.name === name){{ '{' }} 
+            this.scripts[name] = {{ '{' }} 
+              loaded: false,
+              src: ngElementInfo
+            };
+          }
+          });
+        }
+        );
+    return new Promise((resolve, reject) => {{ '{' }} 
+      if (!this.scripts[name].loaded) {{ '{' }} 
+        const ngEl = document.createElement(this.scripts[name].src.tagName);
+        ngEl.setAttribute(this.scripts[name].src.paramName, pid);
+        const script = document.createElement('script');
+        document.getElementById(pid).appendChild(ngEl);
+        script.type = 'text/javascript';
+        script.src = this.scripts[name].src.src;
+        if (script.readyState) {{ '{' }} 
+          script.onreadystatechange = () => {{ '{' }} 
+            if (script.readyState === 'loaded' || script.readyState === 'complete') {{ '{' }} 
+              script.onreadystatechange = null;
+              this.scripts[name].loaded = true;
+              resolve({{ '{' }}  script: name, loaded: true, status: 'Loaded' });
+            }
+          };
+        } else {{ '{' }} 
+          script.onload = (result: any) => {{ '{' }} 
+            console.log(result);
+            this.scripts[name].loaded = true;
+            resolve({{ '{' }}  script: name, loaded: true, status: 'Loaded' });
+          };
+        }
+        script.onerror = (error: any) => resolve({{ '{' }}  script: name, loaded: false, status: 'Loaded' });
+        document.getElementById(pid).appendChild(script);
+        this.scripts[name].loaded = true;
+      } else {{ '{' }} 
+        resolve({{ '{' }}  script: name, loaded: true, status: 'Already Loaded' });
+      }
+    });
+  }</pre>
+        </span>
+        <p>
+          Now we can even decide when to call the loadScript function for our application. This means, we can implements
+          eager loading or
+          lazy loading as follow:
+        </p>
+        <span class="row cli">
+          <pre class=" cmd  col-sm-12">
+  ngOnInit() {{ '{' }} 
+    this.loadScript('app','12345');
+  }</pre>
+        </span>
+          <p>
+            We will come back to this later and add some more code in order to integrate with back-end server, but first let's build one server api
+            in our next section which is accountable for inter-web component communication.
+          </p>
+        <hr>
+        <h2>Communication between Micro Apps</h2>
+        <p>Due to the isolated characterictics of our micro web-components, they cannot see each other when they are
+          dynamically render on the single page shell.
+          Moreover parent shell also doesn't take the reponsibility to set up mesh like networks between several
+          micro-fontend components. To make things simple,
+          concise and easy to manage, each individual component will set up their own channel in Apache Kafka. In this
+          section we will see how to build Real Time Data exchange between Angular clients over Kafka with STOMP
+          Websocket using Spring Boot.
+          We need to provide or set up some basic things that make real time stream possible such as, Kafka data pipeline, the kafka cluster information,
+          application id, the topic to consume, Serdes to use, and so on. We learn't how to set up kafka in our previous article uing docker engine.
+          Let’s create a project in maven and update pom.xml file:
+        </p>
+
+
+        <span class="row cli">
+          <pre class=" cmd  col-sm-12">
+&lt;<span><span>project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span></span>&gt;
+    &lt;<span><span>modelVersion</span></span>&gt;4.0.0 &lt;/<span><span>modelVersion</span></span>&gt;
+
+    &lt;<span><span>groupId</span></span>&gt;com.roytuts &lt;/<span><span>groupId</span></span>&gt;
+    &lt;<span><span>artifactId</span></span>&gt;spring-apache-kafka-streams-websocket-stomp-server &lt;/<span><span>artifactId</span></span>&gt;
+    &lt;<span><span>version</span></span>&gt;0.0.1-SNAPSHOT &lt;/<span><span>version</span></span>&gt;
+
+    &lt;<span><span>parent</span></span>&gt;
+      &lt;<span><span>groupId</span></span>&gt;org.springframework.boot &lt;/<span><span>groupId</span></span>&gt;
+      &lt;<span><span>artifactId</span></span>&gt;spring-boot-starter-parent &lt;/<span><span>artifactId</span></span>&gt;
+      &lt;<span><span>version</span></span>&gt;2.2.2.RELEASE &lt;/<span><span>version</span></span>&gt;
+    &lt;/<span><span>parent</span></span>&gt;
+
+    &lt;<span><span>properties</span></span>&gt;
+      &lt;<span><span>project.build.sourceEncoding</span></span>&gt;UTF-8 &lt;/<span><span>project.build.sourceEncoding</span></span>&gt;
+    &lt;/<span><span>properties</span></span>&gt;
+
+    &lt;<span><span>dependencyManagement</span></span>&gt;
+          &lt;<span><span>dependencies</span></span>&gt;
+        &lt;<span><span>dependency</span></span>&gt;
+                  &lt;<span><span>groupId</span></span>&gt;org.springframework.boot &lt;/<span><span>groupId</span></span>&gt;
+                  &lt;<span><span>artifactId</span></span>&gt;spring-boot-starter-websocket &lt;/<span><span>artifactId</span></span>&gt;
+              &lt;/<span><span>dependency</span></span>&gt;
+      
+              &lt;<span><span>dependency</span></span>&gt;
+                  &lt;<span><span>groupId</span></span>&gt;org.springframework.kafka &lt;/<span><span>groupId</span></span>&gt;
+                  &lt;<span><span>artifactId</span></span>&gt;spring-kafka &lt;/<span><span>artifactId</span></span>&gt;
+                  &lt;<span><span>version</span></span>&gt;2.3.4.RELEASE &lt;/<span><span>version</span></span>&gt;
+              &lt;/<span><span>dependency</span></span>&gt;
+      
+        &lt;<span><span>dependency</span></span>&gt;
+                  &lt;<span><span>groupId</span></span>&gt;org.apache.kafka &lt;/<span><span>groupId</span></span>&gt;
+                  &lt;<span><span>artifactId</span></span>&gt;kafka-streams &lt;/<span><span>artifactId</span></span>&gt;
+                  &lt;<span><span>version</span></span>&gt;2.4.0 &lt;/<span><span>version</span></span>&gt;
+              &lt;/<span><span>dependency</span></span>&gt;
+          &lt;/<span><span>dependencies</span></span>&gt;
+      &lt;/<span><span>dependencyManagement</span></span>&gt;
+
+      &lt;<span><span>build</span></span>&gt;
+          &lt;<span><span>plugins</span></span>&gt;
+        &lt;<span><span>plugin</span></span>&gt;
+          &lt;<span><span>groupId</span></span>&gt;org.apache.maven.plugins &lt;/<span><span>groupId</span></span>&gt;
+          &lt;<span><span>artifactId</span></span>&gt;maven-compiler-plugin &lt;/<span><span>artifactId</span></span>&gt;
+          &lt;<span><span>version</span></span>&gt;3.8.1 &lt;/<span><span>version</span></span>&gt;
+          &lt;<span><span>configuration</span></span>&gt;
+            &lt;<span><span>source</span></span>&gt;at least 8 &lt;/<span><span>source</span></span>&gt;
+            &lt;<span><span>target</span></span>&gt;at least 8 &lt;/<span><span>target</span></span>&gt;
+          &lt;/<span><span>configuration</span></span>&gt;
+        &lt;/<span><span>plugin</span></span>&gt;
+      &lt;/<span><span>plugins</span></span>&gt;
+    &lt;/<span><span>build</span></span>&gt;
+  &lt;/<span><span>project</span></span>&gt;</pre>
+        </span>
+
+        <p>
+          We will create <b>application.properties</b> file under classpath directory src/main/resources to configure
+          some basic settings for Kafka.
+          Producer will produce messages into Kafka topic. Kafka stream library will listen the message from Kafka topic
+          and
+          send to stomp topic <b>/topic/greeting</b>.
+        </p>
+
+
+        <span class="row cli">
+          <pre class=" cmd  col-sm-12">
+spring.kafka.bootstrap-servers=localhost:9092
+spring.kafka.consumer.group-id=anyGroup
+kafka.output.topic=message
+stomp.topic=/topic/greeting</pre>
+        </span>
+
+        <h5>Create Topics</h5>
+        <p>
+          To create a topic we need to add a bean of type NewTopic. If the topic already exists then this bean is
+          ignored.
+          The topics will be created during application start up.
+        </p>
+        <span class="row cli">
+          <pre class=" cmd  col-sm-12">
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class KafkaTopicConfig {{ '{' }} 
+
+	@Value("${{ '{' }} kafka.output.topic}")
+	private String kafkaOutputTopic;
+
+	@Bean
+	public NewTopic outputTopic() {{ '{' }} 
+		NewTopic newTopic = new NewTopic(kafkaOutputTopic, 1, (short) 1);
+
+		return newTopic;
+	}
+}</pre>
+        </span>
+        <h5>Kafka Rest API</h5>
+        <p>
+          Once web client creat a http post request to Kafka rest controller, will then write data to output topic in
+          Kafka.
+          Though in this example the controller just reads the messages and writes on to a topic.
+        </p>
+        <span class="row cli">
+          <pre class=" cmd  col-sm-12">
+@RestController
+@RequestMapping(value = "/api/kafka")
+public class ProducerController {{ '{' }} 
+
+	private static final Logger LOG = LoggerFactory.getLogger(ProducerController.class);
+
+	private ProducerCallback producerCallback = new ProducerCallback();
+
+	@Autowired
+	private KafkaTemplate &lt;String, Model&gt; kafkaTemplate;
+
+	@RequestMapping(value = "/sample", method = RequestMethod.POST)
+	public void generateMessages(@RequestBody Model model) {{ '{' }} 
+		System.out.println(model.toString());
+		sendToKafka(model);
+	}
+
+	private void sendToKafka(Model model) {{ '{' }} 
+		this.kafkaTemplate
+			.send(kafkaInputTopic, UUID.randomUUID().toString(), model)
+			.addCallback(this.producerCallback);
+	}
+
+	class ProducerCallback implements ListenableFutureCallback &lt;SendResult &lt;String, Model&gt;&gt; {{ '{' }} 
+		@Override
+		public void onSuccess(SendResult &lt;String, Model&gt; result) {{ '{' }} 
+			RecordMetadata record = result.getRecordMetadata();
+			LOG.info("Sending {{ '{' }} } to topic {{ '{' }} } - partition {{ '{' }} }",
+					result.getProducerRecord().key(),
+					result.getProducerRecord().topic(),
+					record.partition());
+		}
+
+		@Override
+		public void onFailure(Throwable ex) {{ '{' }} 
+			LOG.error("Producer Failure", ex);
+		}
+	}
+
+}</pre>
+        </span>
+
+        <h5>Configure WebSocket and Stomp</h5>
+        <p>
+          The above WebSocketConfig class is annotated with @Configuration to indicate that it is a Spring configuration
+          class.<br>
+          The class is also annotated @EnableWebSocketMessageBroker and @EnableWebSocketMessageBroker enables WebSocket
+          message handling, backed by a message broker.<br>
+
+          The configureMessageBroker() method overrides the default method in WebSocketMessageBrokerConfigurer interface
+          to configure the message broker.<br>
+
+          It starts by calling enableSimpleBroker() to enable a simple memory-based message broker to carry the greeting
+          messages back to the client on destinations prefixed with /topic.<br>
+
+          The registerStompEndpoints() method registers the <b>/websocket</b> endpoint, enabling SockJS fallback options
+          so that alternate transports may be used if WebSocket is not available.<br>
+
+          The SockJS client will attempt to connect to <b>/websocket</b> and use the best transport available
+          (websocket, xhr-streaming, xhr-polling, etc).<br>
+        </p>
+        <span class="row cli">
+          <pre class=" cmd  col-sm-12">
+import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+
+@Configuration
+@EnableWebSocketMessageBroker
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer  {{ '{' }} 
+
+	@Override
+	public void registerStompEndpoints(StompEndpointRegistry registry)  {{ '{' }} 
+		registry.addEndpoint("/websocket").setAllowedOrigins("*").withSockJS();
+	}
+
+	@Override
+	public void configureMessageBroker(MessageBrokerRegistry config)  {{ '{' }} 
+		config.enableSimpleBroker("/topic");
+	}
+}</pre>
+        </span>
+        <h5>Consume Message</h5>
+        <p>
+          Now we will consume the messages which were written to output topic by Kafka rest api.
+          With Apache Kafka infrastructure a bean can be annotated with @KafkaListener to create a listener endpoint on
+          a topic.
+          Finally we will send to stomp topic <b>/topic/greeting</b>.
+        </p>
+        <span class="row cli">
+          <pre class=" cmd  col-sm-12">
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Component;
+
+@Component
+public class MessageConsumer  {{ '{' }} 
+
+  @Value("$ {{ '{' }} stomp.topic}")
+  private String stompTopic;
+
+  @Autowired
+  private SimpMessagingTemplate messagingTemplate;
+
+  @KafkaListener(topics = "$ {{ '{' }} kafka.output.topic}", groupId = "$ {{ '{' }} spring.kafka.consumer.group-id}")
+  public void consumeMessage(String msg)  {{ '{' }} 
+    System.out.println("Message received: " + msg);
+    messagingTemplate.convertAndSend(stompTopic, msg);
+  }
+
+}</pre>
+        </span>
+        <p>
+          Make sure your ZooKeeper server and Kafka broker are running before you run the main class.
+          We are done with the server application on building real time data messaging using Springframework's Apache
+          Kafka library.
+          Now we will see how to create client application in Angular to see push/pull notifications continuously on
+          browser.
+        </p>
+        <h5>Client Application</h5>
+        <p>We are now ready to resume where we left of finishing web-component. Please install the required modules in the 
+          same angular project we set up initially with the following commands:</p>
+        <span class="row cli">
+          <pre class=" cmd  col-sm-12">
+<span>npm</span> install stompjs
+<span>npm</span> install sockjs-client
+<span>npm</span> install jquery</pre>
+        </span>
+        <p>
+          The stompjs is required to connect over STOMP.
+          The sockjs-client is required to establish connection with WebSocket server.
+          The jquery is required to directly access DOM elements in the HTML page.
+        </p>
+        <h5>Update app.component.ts</h5>
+        <p>
+          This will require updating <b>src/app/app.component.ts</b> file to consume the message over STOMP.
+          We set the page title by implementing OnInit interface in the ngOnInit() method.
+          We will try to establish connection to the WebSocket server, client socket subscribe to the topic <b>/topic/greeting</b> destination, 
+          where the server will publish greeting messages and finally we update the div (having a class msg) on HTML page.
+        </p>
+        <span class="row cli">
+          <pre class=" cmd  col-sm-12">
+import {{ '{' }} OnInit, Component } from '@angular/core';
+import {{ '{' }} Title } from '@angular/platform-browser';
+
+import * as Stomp from 'stompjs';
+import * as SockJS from 'sockjs-client';
+import $ from 'jquery';
+
+@Component({{ '{' }}
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent implements OnInit {{ '{' }}
+  url = 'http://localhost:8080/websocket'
+  client: any;
+  greeting: string;
   
+  ngOnInit() {{ '{' }}
+	this.title.setTitle('Angular Spring Websocket');
+  }
   
+  constructor(private title: Title){{ '{' }}
+    this.connection();
+  }
   
-  
+  connection(){{ '{' }}
+    let ws = new SockJS(this.url);
+    this.client = Stomp.over(ws);
+    let that = this;
+	
+    this.client.connect({{ '{' }}}, function(frame) {{ '{' }}
+      that.client.subscribe("/topic/greeting", (message) => {{ '{' }}
+        if(message.body) {{ '{' }}
+          this.greeting = message.body;
+		  //$(".msg").append(this.greeting)
+		  $(".msg").html(this.greeting)
+		  //alert(this.greeting);
+		  //console.log(this.greeting);
+        }
+      });
+    });
+  }
+}</pre>
+        </span>
+        <p>
+          That's everything in nutshell. You can open up a browser at http://localhost:4200 and you will see the message being updated in milli seconds whenever a new events 
+          comes in the datapipeline. You can send/recieve messages from the Kafka rest server. With this communication platform any web-component can target sending message to a specific 
+          web-component by specifying destination websocket url or we can also add some logic on the client side to filter a specific message from the broadcast that 
+          is intended for it to be comsume.
+        </p>
+
+     
+
+        <hr>
+        <h2>Evaluation</h2>
+        <h5>Advantages</h5>
+        <ul>
+          <li>Styling is isolated from other Microservice Clients due to Shadow DOM or the Shadow DOM Emulation provided
+            by Angular out of the box.</li>
+          <li>Allows for separate development and separate deployment</li>
+          <li>Mixing widgets from different Microservice Clients is possible</li>
+          <li>The shell can be a Single Page Application too</li>
+          <li>We can use different SPA frameworks in different versions for our Microservice Clients</li>
+        </ul>
+        <h5>Disadvantages</h5>
+        <ul>
+          <li>Microservice Clients are not completely isolated as it would be the case when using hyperlinks or iframes
+            instead. This means that they could
+            influence each other in an unplanned way. This also means that there can be conflicts when using different
+            frameworks in different versions.</li>
+          <li>We need polyfills for some browsers</li>
+          <li>We cannot leverage the CLI for generating a self-contained package for every client</li>
+
+        </ul>
+        <h5>Tradeoff</h5>
+        <p>
+          We have to decide, whether we want to import all the libraries once or once for each client. This is more or
+          less a matter of bundling. The first option allows
+          to optimize for bundle sizes; the last option provides more isolation and hence separate development and
+          deployment. This properties are considered valuable
+          architectural goals in the world of micro services.
+        </p>
+        <p>Thank you for taking the time to read.</p>
+      </div>
+    </div>
   </div>
 </div>
-                      
+
+
+
+
+
+
 
 
 <!-- https://www.angulararchitects.io/aktuelles/micro-apps-with-web-components-using-angular-elements/ -->
+<!-- https://shakuro.com/blog/phaser-js-a-step-by-step-tutorial-on-making-a-phaser-3-game -->

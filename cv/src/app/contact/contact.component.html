@@ -1,4 +1,4 @@
-<div  id="ngDiv">
+<div  id="ngDiv" >
   <div class=" about-image bg" > </div>  
   <div  class="container about">     
                       <div class="row">                          
@@ -6,9 +6,9 @@
                             <h2 class="text-center">Get in touch!</h2>
 
 
-                                  <div class="form">
-                                    <div *ngIf="!submitted">
-                                      <h2>Send me a message:</h2>
+                                  <div class="form" >
+                                    <div *ngIf="!submitted" >
+                                      <h5>Send me a message:</h5>
                                       <form (ngSubmit)="onSubmit(model)" #heroForm="ngForm">
                                         <div class="row" >                      
                                         
@@ -52,9 +52,9 @@
                                     </div>
                                   
                                     <div *ngIf="submitted" >
-                                      <h2>Thank you for contacting:</h2>
+                                      <h5>Thank you for contacting:</h5>
                                       <div class="ebg">
-                                        <img src="http://localhost:4201/explore/email.svg" alt="solution archietect" width="100%" >                                        
+                                        <img src="http://localhost:4201/explore/avneet/email.svg" alt="solution archietect" width="100%" >                                        
                                       </div>                                  
                                 
 

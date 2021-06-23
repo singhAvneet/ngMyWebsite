@@ -1,6 +1,6 @@
 @import '../variable.scss'; 
 .bg{
-    background-image: url($--img-url +'/explore/avneet/green/bg.jpg');
+    background-image: url($--img-url +'/explore/avneet/bg.jpg');
     background-position: center;
   }
 
@@ -43,9 +43,10 @@
 
   
 .form{
-
+  padding:7em 0;
   @media screen and (min-width:$--minpad) { 
-   padding:7em
+   padding:7em;
+   height:40em;
   }
 
   .form-group{  

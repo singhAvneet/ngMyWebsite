@@ -25,7 +25,7 @@ export class TutorialsComponent implements OnInit {
       }
   ngOnInit(): void {
 
-    this.script.loadScript('explore-app','explore')
+    this.script.loadScript('explore','explore')
     .then(    
       function(){     
       document.getElementById("explore").style.height="auto"

@@ -13,7 +13,7 @@ declare var document: any;
 
 @Injectable()
 export class DynamicScriptLoaderService {
-
+  Dom = document.getElementsByTagName('explore-app')[0].shadowRoot;
   private scripts: any = {};
   private ngElementStore: NgElementInfo[] = [];
 
@@ -42,7 +42,7 @@ export class DynamicScriptLoaderService {
         const ngEl = document.createElement(this.scripts[name].src.tagName);
         ngEl.setAttribute(this.scripts[name].src.paramName, pid);
         const script = document.createElement('script');
-        document.getElementById(pid).appendChild(ngEl);
+        this.Dom.getElementById(pid).appendChild(ngEl);
         script.type = 'text/javascript';
         script.src = this.scripts[name].src.src;
         if (script.readyState) {
@@ -61,7 +61,7 @@ export class DynamicScriptLoaderService {
           };
         }
         script.onerror = (error: any) => resolve({ script: name, loaded: false, status: 'Loaded' });
-        document.getElementById(pid).appendChild(script);
+        this.Dom.getElementById(pid).appendChild(script);
         this.scripts[name].loaded = true;
       } else {
         resolve({ script: name, loaded: true, status: 'Already Loaded' });

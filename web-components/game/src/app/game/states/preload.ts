@@ -1,8 +1,8 @@
 import * as Assest  from '../variables';
+import {  Scene } from 'phaser';
 
 
-
-export  class Preload extends Phaser.Scene {
+export  class Preload extends Scene {
 
 
     constructor(){

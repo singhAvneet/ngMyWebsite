@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 
+
 @Component({
   selector: 'explore-app',
   templateUrl: './app.component.html',
@@ -9,3 +10,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
 export class AppComponent {
   title = 'component';
 }
+
+
+

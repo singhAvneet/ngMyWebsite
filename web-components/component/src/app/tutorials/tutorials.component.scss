@@ -66,8 +66,13 @@ text-align: inherit;
 .about-article a{
   text-decoration: none;
 }
+
+h2{
+  opacity: 0.8;
+}
+
 .about-article a.underline h2:hover{
-  color: #000000;
+opacity: 1;
 }
 
  
